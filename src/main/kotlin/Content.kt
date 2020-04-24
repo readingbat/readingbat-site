@@ -1,5 +1,5 @@
-import com.github.pambrose.readingbat.ReadingBatServer
-import com.github.pambrose.readingbat.readingBatContent
+import com.github.readingbat.ReadingBatServer
+import com.github.readingbat.readingBatContent
 
 object Main {
     @JvmStatic
