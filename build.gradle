@@ -17,7 +17,7 @@ repositories {
 def mainName = 'com.github.pambrose.readingbat.Main'
 def appName = 'server'
 
-def readingBatVersion = 'fc07af0'
+def readingBatVersion = '9946c59'
 def slf4jVersion = '1.7.28'
 
 sourceCompatibility = 1.8
