@@ -1,6 +1,6 @@
 # ReadingBat Site
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/readingbat/readingbat-java-content)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/readingbat/readingbat-site)
 [![Run on Repl.it](https://repl.it/badge/github/readingbat/readingbat-site)](https://repl.it/github/readingbat/readingbat-site)
 [![Kotlin](https://img.shields.io/badge/%20language-Kotlin-red.svg)](https://kotlinlang.org/)
 

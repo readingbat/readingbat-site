@@ -17,7 +17,7 @@ repositories {
 def mainName = 'com.github.readingbat.Main'
 def appName = 'server'
 
-def readingBatVersion = '7721056'
+def readingBatVersion = '1.0.1'
 def slf4jVersion = '1.7.28'
 
 sourceCompatibility = 1.8
@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 description = 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.0.'
+version '1.0.0'
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
