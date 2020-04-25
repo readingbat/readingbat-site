@@ -74,12 +74,14 @@ val content =
                 description = "This is a description of Warmup 1"
 
                 challenge("simple_choice1") {
+                    description = "This is a description of **simple_choice1**"
 
                     true returns false
                     false returns false
                 }
 
                 challenge("simple_choice2") {
+                    description = "This is a description of **simple_choice2**"
                     codingBatEquiv = "p173401"
 
                     listOf(true, true) returns true
