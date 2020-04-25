@@ -14,10 +14,10 @@ repositories {
     maven { url = 'https://jitpack.io' }
 }
 
-def mainName = 'com.github.readingbat.Main'
+def mainName = 'Main'
 def appName = 'server'
 
-def readingBatVersion = '1.0.1'
+def readingBatVersion = '1dddbb4'
 def slf4jVersion = '1.7.28'
 
 sourceCompatibility = 1.8
