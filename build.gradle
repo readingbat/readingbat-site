@@ -17,9 +17,6 @@ repositories {
 def mainName = 'Main'
 def appName = 'server'
 
-def readingBatVersion = 'c6d1bfb'
-def slf4jVersion = '1.7.28'
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
