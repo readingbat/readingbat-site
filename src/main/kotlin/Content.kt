@@ -1,6 +1,7 @@
-import com.github.readingbat.ReadingBatServer
-import com.github.readingbat.readingBatContent
-import com.github.readingbat.remoteContent
+import com.github.readingbat.dsl.GitHubContent
+import com.github.readingbat.dsl.ReadingBatServer
+import com.github.readingbat.dsl.include
+import com.github.readingbat.dsl.readingBatContent
 
 object Main {
     @JvmStatic
@@ -12,9 +13,8 @@ object Main {
 val content =
     readingBatContent {
 
-        +remoteContent(repo = "readingbat-java-content").java
+        +include(GitHubContent("readingbat-java-content")).java
 
-        +remoteContent(repo = "readingbat-python-content").python
+        +include(GitHubContent("readingbat-python-content")).python
 
     }
-

@@ -34,6 +34,7 @@ sourceSets {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "com.github.readingbat:readingbat-core:${readingBatVersion}"
+    implementation "io.github.microutils:kotlin-logging:${loggingVersion}"
 
     implementation "org.slf4j:jul-to-slf4j:${slf4jVersion}"
 }
