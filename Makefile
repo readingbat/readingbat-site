@@ -17,5 +17,8 @@ uber: uberjar
 heroku:
 	git push heroku master
 
+logs:
+	heroku logs --tail
+
 versioncheck:
 	./gradlew dependencyUpdates
