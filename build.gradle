@@ -11,7 +11,7 @@ repositories {
     maven { url 'https://kotlin.bintray.com/kotlinx' }
     maven { url 'https://kotlin.bintray.com/kotlin-js-wrappers' }
     jcenter()
-    maven { url = 'https://jitpack.io' }
+    maven { url 'https://jitpack.io' }
 }
 
 def mainName = 'Main'
@@ -33,7 +33,10 @@ sourceSets {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
     implementation "com.github.readingbat:readingbat-core:${readingBatVersion}"
+    implementation "com.github.pambrose.common-utils:core-utils:${utilsVersion}"
+
     implementation "io.github.microutils:kotlin-logging:${loggingVersion}"
 
     implementation "org.slf4j:jul-to-slf4j:${slf4jVersion}"
