@@ -6,7 +6,7 @@ plugins {
 }
 
 repositories {
-    maven { url = 'https://maven-central.storage-download.googleapis.com/repos/central/data/' }
+    maven { url 'https://maven-central.storage-download.googleapis.com/repos/central/data/' }
     maven { url 'https://kotlin.bintray.com/ktor' }
     maven { url 'https://kotlin.bintray.com/kotlinx' }
     maven { url 'https://kotlin.bintray.com/kotlin-js-wrappers' }
@@ -20,7 +20,7 @@ def appName = 'server'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-description = 'ReadingBat Site'
+description 'ReadingBat Site'
 group 'com.github.readingbat'
 version '1.0.0'
 
@@ -37,7 +37,6 @@ dependencies {
 
     implementation "org.slf4j:jul-to-slf4j:${slf4jVersion}"
 }
-
 
 // Include build uberjars in heroku deploy
 task stage(dependsOn: ['uberjar', 'build', 'clean'])

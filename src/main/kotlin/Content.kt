@@ -1,5 +1,6 @@
 import com.github.readingbat.ReadingBatServer
 import com.github.readingbat.readingBatContent
+import com.github.readingbat.remoteContent
 
 object Main {
     @JvmStatic
@@ -11,6 +12,11 @@ object Main {
 val content =
     readingBatContent {
 
+        +remoteContent(repo = "readingbat-java-content").java
+
+        +remoteContent(repo = "readingbat-python-content").java
+
+        /*
         java {
             repoRoot = "https://github.com/readingbat/readingbat-java-content"
 
@@ -121,5 +127,6 @@ val content =
                 description = "This is a description of Array 2"
             }
         }
+*/
     }
 
