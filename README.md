@@ -13,7 +13,7 @@ The underlying framework is the [readingbat-core](https://github.com/readingbat/
 * [Python](https://github.com/readingbat/readingbat-python-content)
 
 ## Site Content
-* The top-level page is defined [here](/blob/master/src/main/kotlin/Content.kt)
+* The top-level page is defined [here](src/main/kotlin/Content.kt)
 * The java and kotlin content is defined [here](https://github.com/readingbat/readingbat-java-content/blob/master/src/main/kotlin/Content.kt)
 * The python content is defined [here](https://github.com/readingbat/readingbat-python-content/blob/master/src/main/kotlin/Content.kt)
 
