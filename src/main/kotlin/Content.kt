@@ -12,11 +12,9 @@ object Main {
 
 val content =
   readingBatContent {
-
     +include(GitHubContent("readingbat-java-content")).java
 
     +include(GitHubContent("readingbat-python-content")).python
 
     +include(GitHubContent("readingbat-java-content")).kotlin
-
   }
