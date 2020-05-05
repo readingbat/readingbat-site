@@ -10,11 +10,14 @@ object Main {
   }
 }
 
+val organization = "readingbat"
+val branch = "dev"
+
 val content =
   readingBatContent {
-    +include(GitHubContent("readingbat-java-content")).java
+    +include(GitHubContent(organization, "readingbat-java-content", branch = branch)).java
 
-    +include(GitHubContent("readingbat-python-content")).python
+    +include(GitHubContent(organization, "readingbat-python-content", branch = branch, srcPath = "src")).python
 
-    +include(GitHubContent("readingbat-java-content")).kotlin
+    +include(GitHubContent(organization, "readingbat-java-content", branch = branch)).kotlin
   }
