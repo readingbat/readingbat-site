@@ -6,7 +6,7 @@ import com.github.readingbat.dsl.readingBatContent
 object Main {
   @JvmStatic
   fun main(args: Array<String>) {
-    ReadingBatServer.start(content)
+    ReadingBatServer.start(siteContent)
   }
 }
 
@@ -15,7 +15,7 @@ val javaRepo = "readingbat-java-content"
 val pythonRepo = "readingbat-python-content"
 val branch = "master"
 
-val content =
+val siteContent =
   readingBatContent {
     +include(GitHubContent(organization, javaRepo, branch = branch)).java
 

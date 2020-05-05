@@ -35,6 +35,14 @@ dependencies {
     implementation "org.slf4j:jul-to-slf4j:${slf4jVersion}"
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+    }
+}
+
 // Include build uberjars in heroku deploy
 task stage(dependsOn: ['uberjar', 'build', 'clean'])
 build.mustRunAfter clean
