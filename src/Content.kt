@@ -13,7 +13,7 @@ object Main {
 val organization = "readingbat"
 val javaRepo = "readingbat-java-content"
 val pythonRepo = "readingbat-python-content"
-val branch = "master"
+val branch = "dev"
 
 val siteContent =
   readingBatContent {
