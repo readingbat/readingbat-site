@@ -9,6 +9,8 @@ val branch = "master"
 
 val siteContent =
   readingBatContent {
+    googleAnalyticsId = "UA-164310007-1"
+
     +include(GitHubContent(organization, javaRepo, branch = branch)).java
     +include(GitHubContent(organization, pythonRepo, branch = branch, srcPath = "src")).python
     +include(GitHubContent(organization, javaRepo, branch = branch)).kotlin
