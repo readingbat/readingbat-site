@@ -8,7 +8,7 @@ import mu.KLogging
 val organization = "readingbat"
 val javaRepo = "readingbat-java-content"
 val pythonRepo = "readingbat-python-content"
-val branch = "dev"
+val branch = "master"
 
 val siteContent =
   readingBatContent {
