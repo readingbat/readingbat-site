@@ -14,7 +14,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def mainName = 'Main'
+def mainName = 'Server'
 def appName = 'server'
 
 sourceCompatibility = 1.8
@@ -26,14 +26,10 @@ version '1.0.0'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
     implementation "com.github.readingbat:readingbat-core:${readingbat_version}"
     implementation "com.github.pambrose.common-utils:core-utils:${utils_version}"
-
     implementation "io.github.microutils:kotlin-logging:${logging_version}"
     implementation "ch.qos.logback:logback-classic:${logback_version}"
-    //implementation "org.slf4j:slf4j-simple:${slf4j_version}"
-    //implementation "org.slf4j:jul-to-slf4j:${slf4jVersion}"
 }
 
 sourceSets {
