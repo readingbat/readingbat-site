@@ -6,7 +6,7 @@
 
 This repo has the content for [readingbat.com](https://readingbat.com).
 
-The underlying framework is the [readingbat-core](https://github.com/readingbat/readingbat-core) repo.
+The underlying framework for this is the [readingbat-core](https://github.com/readingbat/readingbat-core) repo.
 
 ## Site Content
 * [Top-level Page](src/main/kotlin/Content.kt)
