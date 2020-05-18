@@ -52,7 +52,12 @@ task stage(dependsOn: ['uberjar', 'build', 'clean'])
 build.mustRunAfter clean
 
 shadowJar {
+    zip64 true
     mergeServiceFiles()
+    exclude "META-INF/*.SF"
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    exclude "LICENSE*"
 }
 
 task uberjar(type: Jar, dependsOn: shadowJar) {
