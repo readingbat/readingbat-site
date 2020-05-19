@@ -23,12 +23,18 @@ run:
 heroku:
 	git push heroku master
 
-clean-heroku:
-	heroku repo:gc --app readingbat
-	heroku repo:purge_cache --app readingbat
+test-heroku:
+	git push test test:master
 
 logs:
 	heroku logs --tail
+
+testlogs:
+	heroku logs --app=testingbat --tail
+
+clean-heroku:
+	heroku repo:gc --app readingbat
+	heroku repo:purge_cache --app readingbat
 
 versioncheck:
 	./gradlew dependencyUpdates
