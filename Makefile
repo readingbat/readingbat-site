@@ -27,7 +27,7 @@ test-heroku:
 	git push test test:master
 
 logs:
-	heroku logs --tail
+	heroku logs --app=readingbat --tail
 
 testlogs:
 	heroku logs --app=testingbat --tail
