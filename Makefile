@@ -25,7 +25,7 @@ heroku:
 
 clean-heroku:
 	heroku repo:gc --app readingbat
-    heroku repo:purge_cache --app readingbat
+	heroku repo:purge_cache --app readingbat
 
 logs:
 	heroku logs --tail
