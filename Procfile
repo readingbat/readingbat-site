@@ -1,1 +1,1 @@
-web: java -XX:+UseContainerSupport -DPORT=$PORT -jar build/libs/server.jar
+web: java -DPORT=$PORT -jar build/libs/server.jar
