@@ -1,1 +1,1 @@
-web: java -XX:+UseContainerSupport -Xmx300m -Xss400k -XX:CICompilerCount=2 -jar build/libs/server.jar
+web: java -jar build/libs/server.jar
