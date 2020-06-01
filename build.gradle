@@ -69,6 +69,7 @@ shadowJar {
 }
 
 task uberjar(type: Jar, dependsOn: shadowJar) {
+    zip64 true
     archiveFileName = 'server.jar'
     manifest {
         attributes('Implementation-Title': appName)
