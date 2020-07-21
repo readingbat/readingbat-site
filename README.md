@@ -9,7 +9,7 @@ This repo has the content for [readingbat.com](https://readingbat.com).
 The underlying framework for this is the [readingbat-core](https://github.com/readingbat/readingbat-core) repo.
 
 ## Site Content
-* [Content.kt](./src/main/kotlin/Content.kt)
+* [Top-level Content.kt](./src/Content.kt)
 * [Java and Kotlin Content](https://github.com/readingbat/readingbat-java-content/blob/master/src/main/kotlin/Content.kt)
 * [Python Content](https://github.com/readingbat/readingbat-python-content/blob/master/src/main/kotlin/Content.kt)
 
