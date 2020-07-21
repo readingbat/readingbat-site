@@ -11,7 +11,7 @@ The underlying framework for this is the [readingbat-core](https://github.com/re
 ## Site Content
 * [Top-level Content.kt](./src/Content.kt)
 * [Java and Kotlin Content](https://github.com/readingbat/readingbat-java-content/blob/master/src/main/kotlin/Content.kt)
-* [Python Content](https://github.com/readingbat/readingbat-python-content/blob/master/src/main/kotlin/Content.kt)
+* [Python Content](https://github.com/readingbat/readingbat-python-content/blob/master/src/Content.kt)
 
 ## Code Content Repos
 * [Java and Kotlin](https://github.com/readingbat/readingbat-java-content)
