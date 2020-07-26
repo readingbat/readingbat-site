@@ -16,4 +16,3 @@ The underlying framework for this is the [readingbat-core](https://github.com/re
 ## Code Content Repos
 * [Java and Kotlin](https://github.com/readingbat/readingbat-java-content)
 * [Python](https://github.com/readingbat/readingbat-python-content)
-

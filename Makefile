@@ -23,6 +23,9 @@ run:
 heroku:
 	git push heroku master
 
+restart:
+	heroku restart -a readingbat
+
 test-heroku:
 	git push test test:master
 
