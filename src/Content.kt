@@ -9,7 +9,7 @@ val branch = "master"
 
 val content =
   readingBatContent {
-    include(GitHubContent(organization, javaRepo, branch = branch).eval().java)
-    include(GitHubContent(organization, pythonRepo, branch = branch, srcPath = "src").eval().python)
-    include(GitHubContent(organization, javaRepo, branch = branch).eval().kotlin)
+    include(GitHubContent(organization, javaRepo, branch = branch).eval(this).java)
+    include(GitHubContent(organization, pythonRepo, branch = branch, srcPath = "src").eval(this).python)
+    include(GitHubContent(organization, javaRepo, branch = branch).eval(this).kotlin)
   }
