@@ -14,5 +14,5 @@ val content =
     include(GitHubContent(Organization, org, pythonRepo, srcPath = "src").eval(this).python)
     include(GitHubContent(Organization, org, javaRepo).eval(this).kotlin)
 
-    include(GitHubContent(User, "maleich", "ReadingBat-content").eval(this).python, "Athenian")
+    include(GitHubContent(User, "maleich", "ReadingBat-content").eval(this).python, "Athenian: ")
   }
