@@ -29,6 +29,9 @@ restart:
 test-heroku:
 	git push test test:master
 
+shell:
+	heroku ps:exec
+
 logs:
 	heroku logs --app=readingbat --tail
 
