@@ -33,6 +33,7 @@ version '1.0.0'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    runtime 'org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable'
     implementation "com.github.readingbat:readingbat-core:$readingbat_version"
     implementation "com.github.pambrose.common-utils:core-utils:$utils_version"
     implementation "io.github.microutils:kotlin-logging:$logging_version"
