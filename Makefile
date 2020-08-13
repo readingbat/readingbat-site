@@ -24,10 +24,10 @@ heroku:
 	git push heroku master
 
 restart:
-	heroku restart -a readingbat
+	heroku restart --app readingbat
 
 test-heroku:
-	git push test test:master
+	git push test master
 
 shell:
 	heroku ps:exec
