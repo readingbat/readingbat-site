@@ -35,8 +35,8 @@ shell:
 logs:
 	heroku logs --app=readingbat --tail
 
-testlogs:
-	heroku logs --app=testingbat --tail
+test-logs:
+	heroku logs --app=test-readingbat --tail
 
 clean-heroku:
 	heroku repo:gc --app readingbat
