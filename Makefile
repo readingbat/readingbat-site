@@ -44,3 +44,6 @@ clean-heroku:
 
 versioncheck:
 	./gradlew dependencyUpdates
+
+upgrade-wrapper:
+	./gradlew wrapper --gradle-version=6.6 --distribution-type=bin
