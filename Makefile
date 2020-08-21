@@ -38,9 +38,6 @@ restart:
 test-restart:
 	heroku restart --app test-readingbat
 
-shell:
-	heroku ps:exec
-
 logs:
 	heroku logs --app=readingbat --tail
 
