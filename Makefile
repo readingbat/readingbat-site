@@ -20,6 +20,12 @@ cc:
 run:
 	./gradlew run
 
+versioncheck:
+	./gradlew dependencyUpdates
+
+upgrade-wrapper:
+	./gradlew wrapper --gradle-version=6.6 --distribution-type=bin
+
 heroku:
 	git push heroku master
 
@@ -45,8 +51,8 @@ clean-heroku:
 	heroku repo:gc --app readingbat
 	heroku repo:purge_cache --app readingbat
 
-versioncheck:
-	./gradlew dependencyUpdates
+visualvm:
+	heroku java:visualvm --app readingbat
 
-upgrade-wrapper:
-	./gradlew wrapper --gradle-version=6.6 --distribution-type=bin
+shell:
+	heroku ps:exec --app readingbat
