@@ -53,3 +53,7 @@ visualvm:
 
 shell:
 	heroku ps:exec --app readingbat
+
+copy:
+	# gzip head*
+	heroku ps:copy --app readingbat /tmp/heapdump-1598156825426.hprof.gz
