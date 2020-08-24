@@ -1,3 +1,5 @@
+VERSION=1.0.0
+
 default: versioncheck
 
 clean:
@@ -57,3 +59,13 @@ shell:
 copy:
 	# gzip head*
 	heroku ps:copy --app readingbat /tmp/heapdump-1598156825426.hprof.gz
+
+build-docker:
+	docker build -t pambrose/readingbat:${VERSION} .
+
+run-docker:
+	docker run -p 8080:8080 pambrose/readingbat:${VERSION}
+
+push-docker:
+	docker push pambrose/readingbat:${VERSION}
+
