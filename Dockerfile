@@ -22,4 +22,4 @@ EXPOSE 8080
 
 CMD []
 # Launch java to execute the jar with defaults intended for containers.
-ENTRYPOINT ["java", "-server", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=100", "-XX:+UseStringDeduplication", "-Dkotlin.script.classpath=/app/server.jar", "-jar", "/app/server.jar"]
+ENTRYPOINT ["java", "-server", "-XX:+UseContainerSupport", "-Xmx256m", "-Dkotlin.script.classpath=/app/server.jar", "-jar", "/app/server.jar"]

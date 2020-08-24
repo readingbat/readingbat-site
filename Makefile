@@ -64,8 +64,20 @@ build-docker:
 	docker build -t pambrose/readingbat:${VERSION} .
 
 run-docker:
-	docker run -p 8080:8080 pambrose/readingbat:${VERSION}
+	docker run --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
 
 push-docker:
 	docker push pambrose/readingbat:${VERSION}
+
+heroku-push:
+	heroku container:push web --app docker-readingbat
+
+heroku-release:
+	heroku container:release web --app docker-readingbat
+
+docker-logs:
+	heroku logs --app=docker-readingbat --tail
+
+docker-open:
+	heroku open --app=docker-readingbat
 
