@@ -1,4 +1,5 @@
 docker_env_vars
+app.yaml
 .classpath
 .project
 .settings/
