@@ -16,10 +16,12 @@ USER $APPLICATION_USER
 COPY ./build/libs/server.jar /app/server.jar
 COPY ./resources /app/resources
 COPY ./src/Content.kt /app/src/Content.kt
+COPY /jmx /app/jmx
 WORKDIR /app
 
 EXPOSE 8080
+EXPOSE 8081
 
 CMD []
 # Launch java to execute the jar with defaults intended for containers.
-ENTRYPOINT ["java", "-server", "-XX:+UseContainerSupport", "-Xmx256m", "-Dkotlin.script.classpath=/app/server.jar", "-jar", "/app/server.jar"]
+ENTRYPOINT ["java", "-server", "-XX:+UseContainerSupport", "-Xmx671m", "-Dkotlin.script.classpath=/app/server.jar", "-javaagent:/app/jmx/jmx_prometheus_javaagent-0.13.0.jar=8081:/app/jmx/config.yaml", "-jar", "/app/server.jar"]
