@@ -13,7 +13,7 @@ build: compile
 uberjar:
 	./gradlew uberjar
 
-uber: uberjar
+run-uber: uberjar
 	java -jar build/libs/server.jar
 
 cc:
