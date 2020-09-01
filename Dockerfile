@@ -21,6 +21,8 @@ WORKDIR /app
 
 EXPOSE 8080
 EXPOSE 8081
+EXPOSE 8083
+EXPOSE 8093
 
 CMD []
 # Launch java to execute the jar with defaults intended for containers.

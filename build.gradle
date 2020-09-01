@@ -35,6 +35,8 @@ dependencies {
     implementation "io.github.microutils:kotlin-logging:$logging_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
 
+    implementation "com.papertrailapp:logback-syslog4j:$syslog_version"
+
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_version"
 }
 
