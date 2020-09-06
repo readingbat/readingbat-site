@@ -16,6 +16,10 @@ uberjar:
 run-uber: uberjar
 	java -jar build/libs/server.jar
 
+distro: clean build uberjar
+
+docker: build-docker push-docker
+
 cc:
 	./gradlew classes --continuous -x test
 
