@@ -1,4 +1,4 @@
-VERSION=`1.0.6
+VERSION=1.0.6
 
 default: versioncheck
 
@@ -9,6 +9,8 @@ compile:
 	./gradlew build -xtest
 
 build: compile
+
+all: distro docker
 
 uberjar:
 	./gradlew uberjar
