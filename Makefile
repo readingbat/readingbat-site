@@ -10,7 +10,10 @@ compile:
 
 build: compile
 
-deploy: distro docker
+pull:
+	git pull
+
+deploy: pull distro docker
 
 uberjar:
 	./gradlew uberjar
