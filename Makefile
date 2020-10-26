@@ -66,6 +66,7 @@ copy:
 	# gzip head*
 	heroku ps:copy --app readingbat /tmp/heapdump-1598156825426.hprof.gz
 
+
 build-docker:
 	docker build -t pambrose/readingbat:${VERSION} .
 
@@ -74,6 +75,12 @@ run-docker:
 
 push-docker:
 	docker push pambrose/readingbat:${VERSION}
+
+build-gcr:
+	docker build -t gcr.io/readingbat-1/readingbat:${VERSION} .
+
+push-gcr:
+	docker push gcr.io/readingbat-1/readingbat:${VERSION}
 
 heroku-push:
 	heroku container:push web --app docker-readingbat
