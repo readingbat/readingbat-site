@@ -25,6 +25,8 @@ distro: clean build uberjar
 
 docker: build-docker push-docker
 
+gcr: build-gcr push-gcr
+
 cc:
 	./gradlew classes --continuous -x test
 
@@ -71,13 +73,16 @@ build-docker:
 	docker build -t pambrose/readingbat:${VERSION} .
 
 run-docker:
-	docker run --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
+	docker run --rm --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
 
 push-docker:
 	docker push pambrose/readingbat:${VERSION}
 
 build-gcr:
 	docker build -t gcr.io/readingbat-1/readingbat:${VERSION} .
+
+run-gcr:
+	docker run --rm --env-file=docker_env_vars -p 8080:8080 gcr.io/readingbat-1/readingbat:${VERSION}
 
 push-gcr:
 	docker push gcr.io/readingbat-1/readingbat:${VERSION}
