@@ -4,5 +4,5 @@ services:
     github:
       branch: main
       deploy_on_push: false
-      repo: readingbat/readingbat-site
+      repo: pambrose/readingbat-site
     name: readingbat
