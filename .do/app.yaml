@@ -3,6 +3,6 @@ services:
   - dockerfile_path: Dockerfile.do
     github:
       branch: main
-      deploy_on_push: true
+      deploy_on_push: false
       repo: readingbat/readingbat-site
     name: readingbat
