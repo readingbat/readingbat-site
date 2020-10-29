@@ -78,6 +78,9 @@ run-docker:
 push-docker:
 	docker push pambrose/readingbat:${VERSION}
 
+build-do:
+	docker build -f Dockerfile.do -t pambrose/readingbat:${VERSION} .
+
 build-gcr:
 	docker build -t gcr.io/readingbat-1/readingbat:${VERSION} .
 

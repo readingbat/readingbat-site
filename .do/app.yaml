@@ -1,0 +1,8 @@
+name: readingbat
+services:
+  - dockerfile_path: Dockerfile.do
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: readingbat/readingbat-site
+    name: readingbat
