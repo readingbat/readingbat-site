@@ -1,4 +1,4 @@
-VERSION=1.0.16
+VERSION=1.0.17
 
 default: versioncheck
 
@@ -14,6 +14,9 @@ pull:
 	git pull
 
 deploy: pull distro docker
+
+tests:
+	./gradlew --rerun-tasks check
 
 uberjar:
 	./gradlew uberjar
