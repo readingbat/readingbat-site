@@ -37,6 +37,8 @@ dependencies {
     implementation "io.github.microutils:kotlin-logging:$logging_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
 
+    runtimeOnly "org.jetbrains.kotlin:kotlin-scripting-jsr223"
+
     testImplementation "com.github.readingbat.readingbat-core:readingbat-kotest:$readingbat_version"
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
