@@ -1,0 +1,15 @@
+Edit /etc/prometheus/prometheus.yml
+
+Restart with: killall -HUP prometheus
+Restart with: systemctl restart prometheus
+
+Include node_exporter-0.17.0.linux-amd64 in this dir
+
+
+Layout:
+root/
+jmx                               notes.txt             run.sh
+node_exporter-0.17.0.linux-amd64  prometheus-proxy.jar  simple.conf
+
+jmx/
+config.yaml  jmx_prometheus_javaagent-0.13.0.jar

@@ -36,6 +36,7 @@ dependencies {
     implementation "com.github.pambrose.common-utils:core-utils:$utils_version"
     implementation "io.github.microutils:kotlin-logging:$logging_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "com.papertrailapp:logback-syslog4j:$papertrail_version"
 
     runtimeOnly "org.jetbrains.kotlin:kotlin-scripting-jsr223"
 
