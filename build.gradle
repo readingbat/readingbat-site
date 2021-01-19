@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.30-M1'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.30-RC'
     id 'com.heroku.sdk.heroku-gradle' version '2.0.0'
     id "com.github.ben-manes.versions" version "0.36.0"
     id 'com.github.johnrengelman.shadow' version '6.1.0'
@@ -25,7 +25,7 @@ targetCompatibility = 1.8
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.0.22'
+version '1.0.23'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
