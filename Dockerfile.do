@@ -12,7 +12,7 @@ FROM adoptopenjdk/openjdk14:alpine-jre
 # Define the user to use in this instance to prevent using root that even in a container, can be a security risk.
 ENV APPLICATION_USER readingbat
 
-ENV AGENT_CONFIG resources/application.conf
+ENV AGENT_CONFIG /app/src/main/resources/application.conf
 
 # Then add the user, create the /app folder and give permissions to our user.
 RUN adduser -D -g '' $APPLICATION_USER
@@ -23,8 +23,8 @@ RUN chown -R $APPLICATION_USER /app
 USER $APPLICATION_USER
 
 COPY --from=builder /home/gradle/src/build/libs/server.jar /app/server.jar
-COPY src/main/resources /app/resources
-COPY src/main/kotlin/Content.kt /app/src/Content.kt
+COPY src/main/kotlin/Content.kt /app/src/main/kotlin/Content.kt
+COPY src/main/resources /app/src/main/resources
 COPY /jmx /app/jmx
 WORKDIR /app
 
