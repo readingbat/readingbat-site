@@ -14,8 +14,8 @@ RUN chown -R $APPLICATION_USER /app
 USER $APPLICATION_USER
 
 COPY ./build/libs/server.jar /app/server.jar
-COPY src/main/resources /app/resources
-COPY src/main/kotlin/Content.kt /app/src/Content.kt
+COPY src/main/kotlin/Content.kt /app/src/main/kotlin/Content.kt
+COPY src/main/resources /app/src/main/resources
 COPY /jmx /app/jmx
 WORKDIR /app
 
