@@ -23,8 +23,8 @@ RUN chown -R $APPLICATION_USER /app
 USER $APPLICATION_USER
 
 COPY --from=builder /home/gradle/src/build/libs/server.jar /app/server.jar
-COPY ./resources /app/resources
-COPY ./src/Content.kt /app/src/Content.kt
+COPY src/main/resources /app/resources
+COPY src/main/kotlin/Content.kt /app/src/Content.kt
 COPY /jmx /app/jmx
 WORKDIR /app
 
