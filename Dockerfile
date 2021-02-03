@@ -28,6 +28,6 @@ EXPOSE 8093
 
 CMD []
 # Launch java to execute the jar with defaults intended for containers.
-ENTRYPOINT ["java", "-server", "-XX:+UseContainerSupport", "-Xmx2048m", "-Dkotlin.script.classpath=/app/server.jar", "-javaagent:/app/jmx/jmx_prometheus_javaagent-0.14.0.jar=8081:/app/jmx/config.yaml", "-jar", "/app/server.jar"]
+ENTRYPOINT ["java", "-server", "-XX:+UseContainerSupport", "-Xmx2048m", "-Dkotlin.script.classpath=/app/server.jar", "-Dlogback.configurationFile=/app/src/main/resources/logback.xml", "-javaagent:/app/jmx/jmx_prometheus_javaagent-0.14.0.jar=8081:/app/jmx/config.yaml", "-jar", "/app/server.jar"]
 
 # CMD ["sh", "-c", "java -server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:InitialRAMFraction=2 -XX:MinRAMFraction=2 -XX:MaxRAMFraction=2 -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar KtorEasy.jar"]
