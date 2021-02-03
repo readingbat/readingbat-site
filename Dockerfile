@@ -3,7 +3,7 @@ FROM adoptopenjdk/openjdk14:alpine-jre
 # Define the user to use in this instance to prevent using root that even in a container, can be a security risk.
 ENV APPLICATION_USER readingbat
 
-ENV AGENT_CONFIG resources/application.conf
+ENV AGENT_CONFIG /app/src/main/resources/application.conf
 
 # Then add the user, create the /app folder and give permissions to our user.
 RUN adduser -D -g '' $APPLICATION_USER
