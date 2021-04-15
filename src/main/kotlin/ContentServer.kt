@@ -15,12 +15,12 @@
  *
  */
 
-import com.github.readingbat.readingbat_site.BuildConfig
+import com.github.readingbat.readingbat_site.BuildConfig.SITE_VERSION
 import com.github.readingbat.server.ReadingBatServer
 
 object ContentServer {
   @JvmStatic
   fun main(args: Array<String>) {
-    ReadingBatServer.start(BuildConfig.SITE_VERSION, args)
+    ReadingBatServer.start(SITE_VERSION, args)
   }
 }
