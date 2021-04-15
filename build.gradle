@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
     id 'com.heroku.sdk.heroku-gradle' version '2.0.0'
     id "com.github.ben-manes.versions" version "0.38.0"
     id 'com.github.johnrengelman.shadow' version '6.1.0'
