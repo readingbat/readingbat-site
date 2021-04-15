@@ -8,6 +8,9 @@ plugins {
 }
 
 repositories {
+    maven { url = 'https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven' }
+    maven { url = 'https://kotlin.bintray.com/ktor' }
+    maven { url = 'https://kotlin.bintray.com/kotlinx' }
     maven { url 'https://maven-central.storage-download.googleapis.com/repos/central/data/' }
     jcenter()
     maven { url 'https://jitpack.io' }
