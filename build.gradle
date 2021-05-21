@@ -31,12 +31,12 @@ targetCompatibility = 1.8
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.0.35'
+version '1.0.36'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"5/19/21\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"5/20/21\"")
 }
 
 dependencies {
@@ -58,9 +58,9 @@ dependencies {
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
 
     testImplementation "io.kotest:kotest-runner-junit5:$kotest_version"
-    testImplementation "io.kotest:kotest-assertions-core:$kotest_version"
-    testImplementation "io.kotest:kotest-assertions-ktor:$kotest_version"
     testImplementation "io.kotest:kotest-property:$kotest_version"
+    testImplementation "io.kotest:kotest-assertions-core:$kotest_version"
+    testImplementation "io.kotest:kotest-assertions-ktor:$kotest_ktor_version"
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_version"
 }
