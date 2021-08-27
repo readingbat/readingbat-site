@@ -31,12 +31,12 @@ targetCompatibility = 1.8
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.2.0'
+version '1.3.0'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"7/16/21\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"8/27/21\"")
 }
 
 dependencies {
