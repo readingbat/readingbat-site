@@ -1,4 +1,4 @@
-VERSION=1.3.0
+VERSION=1.4.0
 
 default: versioncheck
 
@@ -106,4 +106,4 @@ docker-open:
 	heroku open --app=docker-readingbat
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=7.1.1 --distribution-type=bin
+	./gradlew wrapper --gradle-version=7.3 --distribution-type=bin
