@@ -106,4 +106,4 @@ docker-open:
 	heroku open --app=docker-readingbat
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=7.3 --distribution-type=bin
+	./gradlew wrapper --gradle-version=7.3.1 --distribution-type=bin

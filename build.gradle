@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10-RC'
     id 'com.heroku.sdk.heroku-gradle' version '2.0.0'
     id "com.github.ben-manes.versions" version "0.39.0"
     id 'com.github.johnrengelman.shadow' version '7.1.0'
@@ -9,12 +9,7 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven { url = 'https://kotlin.bintray.com/ktor' }
-    maven { url = 'https://kotlin.bintray.com/kotlinx' }
-    maven { url = 'https://kotlin.bintray.com/kotlin-js-wrappers' }
-    maven { url = "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers" }
-    maven { url = 'https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven' }
-    maven { url = 'https://maven-central.storage-download.googleapis.com/repos/central/data/' }
+    maven { url = 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers' }
     mavenCentral()
     maven { url = 'https://jitpack.io' }
 }
