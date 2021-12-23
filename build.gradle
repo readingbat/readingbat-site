@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'com.heroku.sdk.heroku-gradle' version '2.0.0'
     id "com.github.ben-manes.versions" version "0.39.0"
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.1'
     id 'com.github.gmazzo.buildconfig' version '3.0.3'
 }
 
@@ -103,13 +103,11 @@ task uberjar(type: Jar, dependsOn: shadowJar) {
 
 compileKotlin {
     kotlinOptions {
-//        useIR = true
         jvmTarget = "1.8"
     }
 }
 compileTestKotlin {
     kotlinOptions {
-//        useIR = true
         jvmTarget = "1.8"
     }
 }
