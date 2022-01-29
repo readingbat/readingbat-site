@@ -2,8 +2,8 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'com.heroku.sdk.heroku-gradle' version '2.0.0'
-    id "com.github.ben-manes.versions" version "0.39.0"
-    id 'com.github.johnrengelman.shadow' version '7.1.1'
+    id "com.github.ben-manes.versions" version "0.41.0"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.github.gmazzo.buildconfig' version '3.0.3'
 }
 
@@ -27,12 +27,12 @@ targetCompatibility = 1.8
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.5.0'
+version '1.6.0'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"12/14/21\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"1/29/21\"")
 }
 
 dependencies {
@@ -60,13 +60,6 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_version"
 }
-
-//sourceSets {
-//    main.kotlin.srcDirs = main.java.srcDirs = ['src']
-//    test.kotlin.srcDirs = test.java.srcDirs = ['test']
-//    main.resources.srcDirs = ['resources']
-//    test.resources.srcDirs = ['testresources']
-//}
 
 heroku {
     appName = "readingbat"

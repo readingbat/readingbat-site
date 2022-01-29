@@ -17,5 +17,5 @@ $ make distro docker
 Go back to root and launch server with:
 
 ```bash
-$ docker run --rm -d --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:1.5.0
+$ docker run --rm -d --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:1.6.0
 ```
