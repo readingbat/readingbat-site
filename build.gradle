@@ -1,15 +1,15 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.20'
     id 'com.heroku.sdk.heroku-gradle' version '2.0.0'
-    id "com.github.ben-manes.versions" version "0.41.0"
+    id "com.github.ben-manes.versions" version "0.42.0"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.github.gmazzo.buildconfig' version '3.0.3'
 }
 
 repositories {
-    mavenLocal()
     maven { url = 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers' }
+    google()
     mavenCentral()
     maven { url = 'https://jitpack.io' }
 }
@@ -27,12 +27,12 @@ targetCompatibility = 1.8
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.6.0'
+version '1.7.0'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"1/29/21\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"4/13/22\"")
 }
 
 dependencies {
@@ -97,11 +97,13 @@ task uberjar(type: Jar, dependsOn: shadowJar) {
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += ['-Xbackend-threads=8']
     }
 }
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += ['-Xbackend-threads=8']
     }
 }
 
