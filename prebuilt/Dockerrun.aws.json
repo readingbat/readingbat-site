@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "pambrose/readingbat:1.7.0"
+    "Name": "pambrose/readingbat:1.8.0"
   },
   "Ports": [
     {
