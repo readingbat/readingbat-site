@@ -1,4 +1,4 @@
-VERSION=1.8.0
+VERSION=1.9.0
 
 default: versioncheck
 
@@ -28,8 +28,6 @@ distro: clean build uberjar
 
 docker: build-docker push-docker
 
-gcr: build-gcr push-gcr
-
 cc:
 	./gradlew classes --continuous -x test
 
@@ -39,71 +37,24 @@ run:
 versioncheck:
 	./gradlew dependencyUpdates
 
-heroku:
-	git push heroku master
+#build-docker:
+#	docker build -t pambrose/readingbat:${VERSION} .
+#
+#run-docker:
+#	docker run --rm --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
 
-test-heroku:
-	git push test master
+#push-docker:
+#	docker push pambrose/readingbat:${VERSION}
 
-restart:
-	heroku restart --app readingbat
+PLATFORMS := linux/amd64,linux/arm64/v8
+IMAGE_NAME := pambrose/readingbat
 
-test-restart:
-	heroku restart --app test-readingbat
+docker-push:
+	# prepare multiarch
+	docker buildx use buildx 2>/dev/null || docker buildx create --use --name=buildx
+	docker buildx build --platform ${PLATFORMS} --push -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${VERSION} .
 
-logs:
-	heroku logs --app=readingbat --tail
-
-test-logs:
-	heroku logs --app=test-readingbat --tail
-
-clean-heroku:
-	heroku repo:gc --app readingbat
-	heroku repo:purge_cache --app readingbat
-
-visualvm:
-	heroku java:visualvm --app readingbat
-
-shell:
-	heroku ps:exec --app readingbat
-
-copy:
-	# gzip head*
-	heroku ps:copy --app readingbat /tmp/heapdump-1598156825426.hprof.gz
-
-
-build-docker:
-	docker build -t pambrose/readingbat:${VERSION} .
-
-run-docker:
-	docker run --rm --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
-
-push-docker:
-	docker push pambrose/readingbat:${VERSION}
-
-build-do:
-	docker build -f Dockerfile.do -t pambrose/readingbat:${VERSION} .
-
-build-gcr:
-	docker build -t gcr.io/readingbat-1/readingbat:${VERSION} .
-
-run-gcr:
-	docker run --rm --env-file=docker_env_vars -p 8080:8080 gcr.io/readingbat-1/readingbat:${VERSION}
-
-push-gcr:
-	docker push gcr.io/readingbat-1/readingbat:${VERSION}
-
-heroku-push:
-	heroku container:push web --app docker-readingbat
-
-heroku-release:
-	heroku container:release web --app docker-readingbat
-
-docker-logs:
-	heroku logs --app=docker-readingbat --tail
-
-docker-open:
-	heroku open --app=docker-readingbat
+release: clean build uberjar docker-push
 
 upgrade-wrapper:
 	./gradlew wrapper --gradle-version=7.4.2 --distribution-type=bin

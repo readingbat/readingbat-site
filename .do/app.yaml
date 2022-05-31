@@ -1,8 +1,0 @@
-name: readingbat
-services:
-  - dockerfile_path: Dockerfile.do
-    github:
-      branch: main
-      deploy_on_push: false
-      repo: pambrose/readingbat-site
-    name: readingbat

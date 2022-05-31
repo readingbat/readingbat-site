@@ -1,4 +1,6 @@
-FROM adoptopenjdk/openjdk14:alpine-jre
+FROM alpine
+MAINTAINER Paul Ambrose "pambrose@mac.com"
+RUN apk add openjdk17-jre
 
 # Define the user to use in this instance to prevent using root that even in a container, can be a security risk.
 ENV APPLICATION_USER readingbat

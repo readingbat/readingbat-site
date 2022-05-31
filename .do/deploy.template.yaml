@@ -1,8 +1,0 @@
-spec:
-  name: readingbat
-  services:
-    - dockerfile_path: Dockerfile.do
-      git:
-        branch: main
-        repo_clone_url: https://github.com/readingbat/readingbat-site.git
-      name: readingbat
