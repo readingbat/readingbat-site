@@ -58,12 +58,12 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_version"
 }
 
-heroku {
-    appName = "readingbat"
-    jdkVersion = 11
-    includes = ["build/libs/server.jar"]
-    includeBuildDir = false
-}
+//heroku {
+//    appName = "readingbat"
+//    jdkVersion = 11
+//    includes = ["build/libs/server.jar"]
+//    includeBuildDir = false
+//}
 
 // Include build uberjars in heroku deploy
 task stage(dependsOn: ['uberjar', 'build', 'clean'])
