@@ -9,21 +9,21 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <appender name="SYSLOG-TLS" class="com.papertrailapp.logback.Syslog4jAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%-5level [%file:%line] - %msg%n%xEx</pattern>
-        </layout>
+    <!--    <appender name="SYSLOG-TLS" class="com.papertrailapp.logback.Syslog4jAppender">-->
+    <!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+    <!--            <pattern>%-5level [%file:%line] - %msg%n%xEx</pattern>-->
+    <!--        </layout>-->
 
-        <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.ssl.SSLTCPNetSyslogConfig">
-            <host>logs.papertrailapp.com</host>
-            <port>${PAPERTRAIL_PORT}</port>
-            <ident>readingbat</ident>
-            <maxMessageLength>128000</maxMessageLength>
-        </syslogConfig>
-    </appender>
+    <!--        <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.ssl.SSLTCPNetSyslogConfig">-->
+    <!--            <host>logs.papertrailapp.com</host>-->
+    <!--            <port>${PAPERTRAIL_PORT}</port>-->
+    <!--            <ident>readingbat</ident>-->
+    <!--            <maxMessageLength>128000</maxMessageLength>-->
+    <!--        </syslogConfig>-->
+    <!--    </appender>-->
 
-    <root level="INFO">
-        <appender-ref ref="SYSLOG-TLS"/>
-    </root>
+    <!--    <root level="INFO">-->
+    <!--        <appender-ref ref="SYSLOG-TLS"/>-->
+    <!--    </root>-->
 
 </configuration>
