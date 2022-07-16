@@ -1,13 +1,13 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id "com.github.ben-manes.versions" version "0.42.0"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.github.gmazzo.buildconfig' version '3.1.0'
 }
 
 repositories {
-    maven { url = 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers' }
+    //maven { url = 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers' }
     google()
     mavenCentral()
     maven { url = 'https://jitpack.io' }
@@ -26,38 +26,20 @@ targetCompatibility = 1.8
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.10.2'
+version '1.10.3'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"06/23/2022\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"07/16/2022\"")
 }
 
 dependencies {
     implementation "com.github.readingbat.readingbat-core:readingbat-core:$readingbat_version"
-
     implementation "com.github.pambrose.common-utils:core-utils:$utils_version"
     implementation "io.github.microutils:kotlin-logging:$logging_version"
-    implementation "ch.qos.logback:logback-classic:$logback_version"
-    //implementation "com.papertrailapp:logback-syslog4j:$papertrail_version"
-
-    runtimeOnly "org.jetbrains.kotlin:kotlin-scripting-jsr223:$kotlin_version"
-
-    testImplementation "com.github.readingbat.readingbat-core:readingbat-kotest:$readingbat_version"
-
-    testImplementation "io.ktor:ktor-server-tests:$ktor_version"
-    testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
-
-    testImplementation "io.kotest:kotest-runner-junit5:$kotest_version"
-    testImplementation "io.kotest:kotest-property:$kotest_version"
-    testImplementation "io.kotest:kotest-assertions-core:$kotest_version"
-    testImplementation "io.kotest:kotest-assertions-ktor:$kotest_ktor_version"
-
-    testImplementation "org.junit.jupiter:junit-jupiter:$junit_version"
 }
 
-// Include build uberjars in heroku deploy
 task stage(dependsOn: ['uberjar', 'build', 'clean'])
 build.mustRunAfter clean
 
