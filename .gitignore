@@ -1,4 +1,5 @@
 docker_env_vars
+digital-ocean-secrets.txt
 app.yaml
 .classpath
 .project
