@@ -1,9 +1,9 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.21'
     id "com.github.ben-manes.versions" version "0.46.0"
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'com.github.gmazzo.buildconfig' version '3.1.0'
+    id 'com.github.gmazzo.buildconfig' version '4.0.4'
 }
 
 repositories {
@@ -26,12 +26,12 @@ targetCompatibility = 17
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.10.9'
+version '1.10.10'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"04/13/23\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"05/16/23\"")
 }
 
 dependencies {
