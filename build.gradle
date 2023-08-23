@@ -21,17 +21,17 @@ def appName = 'server'
 //    mainClassName = mainName
 //}
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+//sourceCompatibility = JavaVersion.VERSION_17
+//targetCompatibility = JavaVersion.VERSION_17
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.11.0'
+version '1.12.0'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"07/27/23\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"08/23/23\"")
 }
 
 dependencies {
