@@ -1,13 +1,12 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
-    id "com.github.ben-manes.versions" version "0.47.0"
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+    id "com.github.ben-manes.versions" version "0.49.0"
     id 'com.github.gmazzo.buildconfig' version '4.1.2'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
-    //maven { url = 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers' }
     google()
     mavenCentral()
     maven { url = 'https://jitpack.io' }
@@ -26,12 +25,12 @@ def appName = 'server'
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.12.0'
+version '1.13.0'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"08/23/23\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"11/01/23\"")
 }
 
 dependencies {
