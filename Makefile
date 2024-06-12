@@ -1,4 +1,4 @@
-VERSION=1.14.0
+VERSION=1.15.0
 
 default: versioncheck
 
@@ -57,4 +57,4 @@ docker-push:
 release: clean build uberjar docker-push
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=8.5 --distribution-type=bin
+	./gradlew wrapper --gradle-version=8.8 --distribution-type=bin
