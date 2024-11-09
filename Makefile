@@ -5,10 +5,8 @@ default: versioncheck
 clean:
 	./gradlew clean
 
-compile: clean
+build: clean
 	./gradlew build -xtest
-
-build: compile
 
 pull:
 	git pull
@@ -24,10 +22,6 @@ uberjar:
 run-uber: uberjar
 	java -jar build/libs/server.jar
 
-distro: clean build uberjar
-
-docker: build-docker push-docker
-
 cc:
 	./gradlew classes --continuous -x test
 
@@ -36,6 +30,10 @@ run:
 
 versioncheck:
 	./gradlew dependencyUpdates
+
+#distro: clean build uberjar
+
+#docker: build-docker push-docker
 
 #build-docker:
 #	docker build -t pambrose/readingbat:${VERSION} .
