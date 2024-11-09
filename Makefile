@@ -1,11 +1,11 @@
-VERSION=1.15.0
+VERSION=1.16.1
 
 default: versioncheck
 
 clean:
 	./gradlew clean
 
-compile:
+compile: clean
 	./gradlew build -xtest
 
 build: compile
@@ -57,4 +57,4 @@ docker-push:
 release: clean build uberjar docker-push
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=8.8 --distribution-type=bin
+	./gradlew wrapper --gradle-version=8.10.2 --distribution-type=bin
