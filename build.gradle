@@ -1,14 +1,15 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '2.0.21'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
     id "com.github.ben-manes.versions" version "0.51.0"
-    id 'com.github.gmazzo.buildconfig' version '5.5.0'
+    id 'com.github.gmazzo.buildconfig' version '5.5.1'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 repositories {
     google()
     mavenCentral()
+    mavenLocal()
     maven { url = 'https://jitpack.io' }
 }
 
@@ -25,7 +26,7 @@ def appName = 'server'
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.16.1'
+version '1.16.2'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
@@ -34,7 +35,8 @@ buildConfig {
 }
 
 dependencies {
-    implementation "com.github.readingbat.readingbat-core:readingbat-core:$readingbat_version"
+//    implementation "com.github.readingbat.readingbat-core:readingbat-core:$readingbat_version"
+    implementation "com.github.readingbat:readingbat-core:$readingbat_version"
     implementation "com.github.pambrose.common-utils:core-utils:$utils_version"
     implementation "io.github.oshai:kotlin-logging-jvm:$logging_version"
 }
@@ -70,10 +72,14 @@ kotlin {
 }
 
 compileKotlin {
-    kotlinOptions.freeCompilerArgs += ['-Xbackend-threads=8']
+    kotlinOptions {
+        freeCompilerArgs += ['-Xbackend-threads=8']
+    }
 }
 compileTestKotlin {
-    kotlinOptions.freeCompilerArgs += ['-Xbackend-threads=8']
+    kotlinOptions {
+        freeCompilerArgs += ['-Xbackend-threads=8']
+    }
 }
 
 test {
