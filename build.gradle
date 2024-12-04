@@ -26,12 +26,12 @@ def appName = 'server'
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '1.16.2'
+version '2.0.0'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"11/08/24\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"12/03/24\"")
 }
 
 dependencies {
