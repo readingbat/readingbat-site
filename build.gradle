@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
-    id "com.github.ben-manes.versions" version "0.51.0"
+    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
+    id "com.github.ben-manes.versions" version "0.52.0"
     id 'com.github.gmazzo.buildconfig' version '5.5.1'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
@@ -26,12 +26,12 @@ def appName = 'server'
 
 description 'ReadingBat Site'
 group 'com.github.readingbat'
-version '2.0.0'
+version '2.0.1'
 
 buildConfig {
     buildConfigField('String', 'SITE_NAME', "\"${project.name}\"")
     buildConfigField('String', 'SITE_VERSION', "\"${project.version}\"")
-    buildConfigField('String', 'SITE_RELEASE_DATE', "\"12/03/24\"")
+    buildConfigField('String', 'SITE_RELEASE_DATE', "\"1/29/25\"")
 }
 
 dependencies {
