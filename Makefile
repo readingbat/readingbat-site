@@ -11,8 +11,6 @@ build: clean
 pull:
 	git pull
 
-deploy: pull distro docker
-
 tests:
 	./gradlew --rerun-tasks check
 
@@ -55,4 +53,4 @@ docker-push:
 release: clean build uberjar docker-push
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=8.12.1 --distribution-type=bin
+	./gradlew wrapper --gradle-version=8.13 --distribution-type=bin
