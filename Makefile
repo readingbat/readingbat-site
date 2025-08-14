@@ -15,7 +15,7 @@ tests:
 	./gradlew --rerun-tasks check
 
 uberjar:
-	./gradlew uberjar
+	./gradlew buildFatJar
 
 run-uber: uberjar
 	java -jar build/libs/server.jar
