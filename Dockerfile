@@ -1,11 +1,11 @@
 FROM alpine
-MAINTAINER Paul Ambrose "pambrose@mac.com"
+LABEL maintainer="Paul Ambrose <pambrose@mac.com>"
 RUN apk add openjdk21-jre
 
 # Define the user to use in this instance to prevent using root that even in a container, can be a security risk.
-ENV APPLICATION_USER readingbat
+ENV APPLICATION_USER=readingbat
 
-ENV AGENT_CONFIG /app/src/main/resources/application.conf
+ENV AGENT_CONFIG=/app/src/main/resources/application.conf
 
 # Then add the user, create the /app folder and give permissions to our user.
 RUN adduser -D -g '' $APPLICATION_USER
@@ -15,10 +15,10 @@ RUN chown -R $APPLICATION_USER /app
 # Mark this container to use the specified $APPLICATION_USER
 USER $APPLICATION_USER
 
-COPY ./build/libs/server.jar /app/server.jar
+COPY build/libs/server.jar /app/server.jar
 COPY src/main/kotlin/Content.kt /app/src/main/kotlin/Content.kt
 COPY src/main/resources /app/src/main/resources
-COPY /jmx /app/jmx
+COPY jmx /app/jmx
 WORKDIR /app
 
 EXPOSE 8080

@@ -1,0 +1,3 @@
+We are manually loading the script engines with META-INF/services/javax.script.ScriptEngineFactory
+because they are not loading automatically. Strangely, running the server from readingbat-core
+does not require this.

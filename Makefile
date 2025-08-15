@@ -53,4 +53,4 @@ docker-push:
 release: clean build uberjar docker-push
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=9.0.0 --distribution-type=bin
+	./gradlew wrapper --gradle-version=8.14.2 --distribution-type=bin

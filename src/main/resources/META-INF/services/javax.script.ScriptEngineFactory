@@ -1,0 +1,3 @@
+ch.obermuhlner.scriptengine.java.JavaScriptEngineFactory
+org.python.jsr223.PyScriptEngineFactory
+kotlin.script.experimental.jsr223.KotlinJsr223DefaultScriptEngineFactory

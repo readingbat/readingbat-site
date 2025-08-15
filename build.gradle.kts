@@ -16,14 +16,6 @@ repositories {
   maven { url = uri("https://jitpack.io") }
 }
 
-val mainName = "ContentServer"
-val appName = "server"
-
-// This is for ./gradlew run
-application {
-  mainClass.set(mainName)
-}
-
 description = "ReadingBat Site"
 group = "com.github.readingbat"
 version = "2.1.0"
@@ -45,14 +37,9 @@ kotlin {
   jvmToolchain(17)
 }
 
-tasks.register("stage") {
-  dependsOn("build", "clean")
+application {
+  mainClass = "ContentServer"
 }
-
-tasks.named("build") {
-  mustRunAfter("clean")
-}
-
 
 ktor {
   fatJar {
@@ -61,13 +48,24 @@ ktor {
 }
 
 tasks.shadowJar {
-  setZip64(true)
   isZip64 = true
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   exclude("META-INF/*.SF")
   exclude("META-INF/*.DSA")
   exclude("META-INF/*.RSA")
   exclude("LICENSE*")
+}
+
+configurations.all {
+  resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+}
+
+tasks.register("stage") {
+  dependsOn("build", "clean")
+}
+
+tasks.named("build") {
+  mustRunAfter("clean")
 }
 
 tasks.test {
