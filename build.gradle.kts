@@ -56,10 +56,6 @@ tasks.shadowJar {
   exclude("LICENSE*")
 }
 
-configurations.all {
-  resolutionStrategy.cacheChangingModulesFor(0, "seconds")
-}
-
 tasks.register("stage") {
   dependsOn("build", "clean")
 }
@@ -76,4 +72,8 @@ tasks.test {
     exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     showStandardStreams = true
   }
+}
+
+configurations.all {
+  resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }
