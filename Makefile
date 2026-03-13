@@ -51,6 +51,11 @@ docker-push:
 	docker buildx build --platform ${PLATFORMS} --push -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${VERSION} .
 
 release: clean build uberjar docker-push
+	say finished app release
+
+deploy:
+	./secrets/deploy-app.sh
+	say finished app deployment
 
 upgrade-wrapper:
 	./gradlew wrapper --gradle-version=9.4.0 --distribution-type=bin
