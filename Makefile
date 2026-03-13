@@ -1,4 +1,4 @@
-VERSION=2.1.0
+VERSION=$(shell grep '^version =' build.gradle.kts | sed 's/.*"\(.*\)"/\1/')
 
 default: versioncheck
 
@@ -53,4 +53,4 @@ docker-push:
 release: clean build uberjar docker-push
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=8.14.2 --distribution-type=bin
+	./gradlew wrapper --gradle-version=9.4.0 --distribution-type=bin
