@@ -6,7 +6,7 @@ buildconfig = "6.0.9"
 
 # Dependencies
 logging = "8.0.01"
-readingbat = "3.0.0"
+readingbat = "3.0.1"
 ktor = "3.4.1"
 
 [libraries]
