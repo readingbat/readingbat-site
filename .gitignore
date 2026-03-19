@@ -7,6 +7,9 @@ build/
 .idea/
 .vscode/
 .gradle/
+.kotlin/
+.claude/worktrees
+.claude/*.lock
 out/
 bin/
 
