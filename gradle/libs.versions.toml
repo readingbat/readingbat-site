@@ -6,13 +6,22 @@ buildconfig = "6.0.9"
 
 # Dependencies
 logging = "8.0.01"
-readingbat = "3.0.2"
+readingbat = "3.0.3"
+kotest = "6.1.7"
 ktor = "3.4.1"
 
 [libraries]
 # Dependencies
 readingbat-core = { module = "com.github.readingbat.readingbat-core:readingbat-core", version.ref = "readingbat" }
+readingbat-kotest = { module = "com.github.readingbat.readingbat-core:readingbat-kotest", version.ref = "readingbat" }
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "logging" }
+
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-assertions-ktor = { module = "io.kotest:kotest-assertions-ktor", version.ref = "kotest" }
+
+ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

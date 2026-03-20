@@ -6,7 +6,7 @@ clean:
 	./gradlew clean
 
 build: clean
-	./gradlew build -xtest
+	./gradlew build -x test
 
 pull:
 	git pull
@@ -58,4 +58,4 @@ deploy:
 	say finished app deployment
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=9.4.0 --distribution-type=bin
+	./gradlew wrapper --gradle-version=9.4.1 --distribution-type=bin

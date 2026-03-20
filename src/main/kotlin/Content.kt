@@ -6,9 +6,12 @@ import com.github.readingbat.dsl.readingBatContent
 
 val content =
   readingBatContent {
-    include(GitHubContent(Organization, "readingbat", "readingbat-java-content").eval(this).java)
-    include(GitHubContent(Organization, "readingbat", "readingbat-python-content").eval(this).python)
-    include(GitHubContent(Organization, "readingbat", "readingbat-java-content").eval(this).kotlin)
+    val jvmRepo = GitHubContent(Organization, "readingbat", "readingbat-java-content").eval(this)
+    val pythonRepo = GitHubContent(Organization, "readingbat", "readingbat-python-content").eval(this)
+    val athenianRepo = GitHubContent(User, "maleich", "ReadingBat-content").eval(this)
 
-    include(GitHubContent(User, "maleich", "ReadingBat-content").eval(this).python, "Athenian: ")
+    include(jvmRepo.java)
+    include(pythonRepo.python)
+    include(jvmRepo.kotlin)
+    include(athenianRepo.python, "Athenian: ")
   }
