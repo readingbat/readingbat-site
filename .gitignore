@@ -12,6 +12,7 @@ build/
 .claude/*.lock
 out/
 bin/
+.DS_Store
 
 docker_env_vars
 login-info.txt

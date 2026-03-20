@@ -2,7 +2,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 plugins {
-  java
   application
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.versions)
@@ -18,7 +17,7 @@ repositories {
 
 description = "ReadingBat Site"
 group = "com.github.readingbat"
-version = "3.1.1"
+version = "3.1.2"
 
 val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
@@ -31,14 +30,23 @@ buildConfig {
 dependencies {
   implementation(libs.readingbat.core)
   implementation(libs.kotlin.logging)
+
+  implementation(platform(libs.ktor.bom))
+  testImplementation(libs.ktor.server.test.host)
+
+  testImplementation(libs.readingbat.kotest)
+
+  testImplementation(libs.kotest.runner.junit5)
+  testImplementation(libs.kotest.assertions.core)
+  testImplementation(libs.kotest.assertions.ktor)
 }
 
 kotlin {
-  jvmToolchain(17)
+  jvmToolchain(21)
 }
 
 application {
-  mainClass = "ContentServer"
+  mainClass = "ContentServerKt"
 }
 
 ktor {
@@ -56,9 +64,10 @@ tasks.shadowJar {
   exclude("LICENSE*")
 }
 
-tasks.register("stage") {
-  dependsOn("build", "clean")
-}
+// Heroku-only
+//tasks.register("stage") {
+//  dependsOn("build")
+//}
 
 tasks.named("build") {
   mustRunAfter("clean")

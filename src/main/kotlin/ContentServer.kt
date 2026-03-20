@@ -14,13 +14,11 @@
  * limitations under the License.
  *
  */
+@file:Suppress
 
 import com.github.readingbat.readingbat_site.BuildConfig.SITE_VERSION
 import com.github.readingbat.server.ReadingBatServer
 
-object ContentServer {
-  @JvmStatic
-  fun main(args: Array<String>) {
-    ReadingBatServer.start(SITE_VERSION, args)
-  }
+fun main(args: Array<String>) {
+  ReadingBatServer.start(SITE_VERSION, args)
 }
