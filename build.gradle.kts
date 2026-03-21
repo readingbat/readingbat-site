@@ -1,12 +1,13 @@
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
   application
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.ktor.plugin)
   alias(libs.plugins.versions)
   alias(libs.plugins.buildconfig)
-  alias(libs.plugins.ktor.plugin)
 }
 
 repositories {
@@ -77,7 +78,7 @@ tasks.test {
   useJUnitPlatform()
 
   testLogging {
-    events("passed", "skipped", "failed", "standardOut", "standardError")
+    events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
     exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     showStandardStreams = true
   }

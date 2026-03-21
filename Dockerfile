@@ -26,4 +26,4 @@ EXPOSE 8092
 EXPOSE 8093
 
 # Launch java to execute the jar with defaults intended for containers.
-ENTRYPOINT ["java", "-server", "-XX:+UseContainerSupport", "-Xmx2048m", "-Dkotlin.script.classpath=/app/server.jar", "-Dlogback.configurationFile=/app/src/main/resources/logback.xml", "-javaagent:/app/jmx/jmx_prometheus_javaagent-1.5.0.jar=8081:/app/jmx/config.yaml", "-jar", "/app/server.jar"]
+ENTRYPOINT ["java", "-server", "-Xmx2048m", "-Dkotlin.script.classpath=/app/server.jar", "-Dlogback.configurationFile=/app/src/main/resources/logback.xml", "-javaagent:/app/jmx/jmx_prometheus_javaagent-1.5.0.jar=8081:/app/jmx/config.yaml", "-jar", "/app/server.jar"]
