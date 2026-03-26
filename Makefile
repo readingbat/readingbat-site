@@ -6,7 +6,7 @@ clean:
 	./gradlew clean
 
 build: clean
-	./gradlew build -x test
+	./gradlew build -xtest
 
 pull:
 	git pull
@@ -56,6 +56,9 @@ release: clean build uberjar docker-push
 deploy:
 	./secrets/deploy-app.sh
 	say finished app deployment
+
+do-log:
+	./secrets/app-log.sh
 
 upgrade-wrapper:
 	./gradlew wrapper --gradle-version=9.4.1 --distribution-type=bin
