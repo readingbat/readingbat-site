@@ -18,7 +18,7 @@ repositories {
 
 description = "ReadingBat Site"
 group = "com.github.readingbat"
-version = "3.1.4"
+version = "3.1.5"
 
 val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 

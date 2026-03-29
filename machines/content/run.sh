@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker run --rm -d --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:3.1.4
+docker run --rm -d --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:3.1.5
