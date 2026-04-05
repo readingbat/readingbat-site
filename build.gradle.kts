@@ -10,15 +10,9 @@ plugins {
   alias(libs.plugins.buildconfig)
 }
 
-repositories {
-  google()
-  mavenCentral()
-  maven { url = uri("https://jitpack.io") }
-}
-
 description = "ReadingBat Site"
-group = "com.github.readingbat"
-version = "3.1.5"
+group = "com.readingbat"
+version = "3.2.0"
 
 val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
@@ -26,6 +20,13 @@ buildConfig {
   buildConfigField("String", "SITE_NAME", "\"${project.name}\"")
   buildConfigField("String", "SITE_VERSION", "\"${project.version}\"")
   buildConfigField("String", "SITE_RELEASE_DATE", "\"${LocalDate.now().format(formatter)}\"")
+}
+
+repositories {
+  mavenLocal()
+  google()
+  mavenCentral()
+  maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -82,8 +83,4 @@ tasks.test {
     exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     showStandardStreams = true
   }
-}
-
-configurations.all {
-  resolutionStrategy.cacheChangingModulesFor(0, "seconds")
 }
