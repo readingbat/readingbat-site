@@ -12,7 +12,7 @@ plugins {
 
 description = "ReadingBat Site"
 group = "com.readingbat"
-version = "3.2.0"
+version = "3.2.1"
 
 val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
@@ -23,7 +23,7 @@ buildConfig {
 }
 
 repositories {
-  // mavenLocal()
+  mavenLocal()
   google()
   mavenCentral()
 }
