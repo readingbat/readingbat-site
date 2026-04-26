@@ -45,7 +45,7 @@ versioncheck:
 #push-docker:
 #	docker push pambrose/readingbat:${VERSION}
 
-PLATFORMS := linux/amd64,linux/arm64/v8
+PLATFORMS := linux/amd64,linux/arm64
 IMAGE_NAME := pambrose/readingbat
 
 docker-push:
