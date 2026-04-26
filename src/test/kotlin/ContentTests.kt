@@ -14,7 +14,8 @@
  *   limitations under the License.
  */
 
-import com.readingbat.kotest.TestSupport
+import com.readingbat.common.KtorProperty
+import com.readingbat.common.Property
 import com.readingbat.kotest.TestSupport.answerAllWith
 import com.readingbat.kotest.TestSupport.answerAllWithCorrectAnswer
 import com.readingbat.kotest.TestSupport.forEachAnswer
@@ -27,12 +28,14 @@ import com.readingbat.posts.AnswerStatus
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeBlank
-import io.ktor.server.testing.testApplication
+import io.ktor.server.testing.*
 
 class ContentTests : StringSpec() {
   init {
     beforeTest {
-      TestSupport.initTestProperties()
+      Property.IS_PRODUCTION.setProperty("true")
+      Property.IS_TESTING.setProperty("false")
+      KtorProperty.assignInitialized()
     }
 
     "Test all challenges" {

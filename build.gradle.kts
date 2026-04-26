@@ -1,6 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
   application
@@ -15,17 +15,12 @@ group = "com.readingbat"
 version = "3.2.1"
 
 val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+val releaseDate = (findProperty("releaseDate") as? String) ?: LocalDate.now().format(formatter)
 
 buildConfig {
   buildConfigField("String", "SITE_NAME", "\"${project.name}\"")
   buildConfigField("String", "SITE_VERSION", "\"${project.version}\"")
-  buildConfigField("String", "SITE_RELEASE_DATE", "\"${LocalDate.now().format(formatter)}\"")
-}
-
-repositories {
-  mavenLocal()
-  google()
-  mavenCentral()
+  buildConfigField("String", "SITE_RELEASE_DATE", "\"$releaseDate\"")
 }
 
 dependencies {

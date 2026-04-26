@@ -6,7 +6,10 @@ clean:
 	./gradlew clean
 
 build: clean
-	./gradlew build -xtest
+	./gradlew build -PreleaseDate=04/25/2026 -xtest
+
+local-build: clean
+	./gradlew build -PuseMavenLocal=true -PreleaseDate=04/25/2026 -xtest
 
 pull:
 	git pull
