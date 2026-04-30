@@ -1,7 +1,7 @@
 [versions]
 # Plugins
 kotlin = "2.3.21"
-versions = "0.53.0"
+versions = "0.54.0"
 buildconfig = "6.0.9"
 
 # Dependencies
