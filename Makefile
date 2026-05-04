@@ -32,8 +32,7 @@ versioncheck:
 	./gradlew dependencyUpdates
 
 #build-docker:
-#	docker build -t pambrose/readingbat:${VERSION} .
-#
+#	docker build -t pambrose/readingbat:${VERSION}
 #run-docker:
 #	docker run --rm --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
 
