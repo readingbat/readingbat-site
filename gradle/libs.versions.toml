@@ -5,8 +5,8 @@ versions = "0.54.0"
 buildconfig = "6.0.9"
 
 # Dependencies
-logging = "8.0.01"
-readingbat = "3.1.4"
+logging = "8.0.02"
+readingbat = "3.1.5"
 kotest = "6.1.11"
 ktor = "3.4.3"
 
@@ -21,7 +21,7 @@ kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.
 kotest-assertions-ktor = { module = "io.kotest:kotest-assertions-ktor", version.ref = "kotest" }
 
 ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }
-ktor-server-test-host = { module = "io.ktor:ktor-server-test-host" }
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
