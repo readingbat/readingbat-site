@@ -12,13 +12,16 @@ RUN adduser -D -H $APPLICATION_USER && mkdir /app && chown -R $APPLICATION_USER 
 # Mark this container to use the specified $APPLICATION_USER
 USER $APPLICATION_USER
 
-COPY src/main/kotlin/Content.kt /app/src/main/kotlin/Content.kt
-COPY src/main/resources /app/src/main/resources
-COPY jmx /app/jmx
-COPY build/libs/server.jar /app/server.jar
+COPY --chown=$APPLICATION_USER:$APPLICATION_USER src/main/kotlin/Content.kt /app/src/main/kotlin/Content.kt
+COPY --chown=$APPLICATION_USER:$APPLICATION_USER src/main/resources /app/src/main/resources
+COPY --chown=$APPLICATION_USER:$APPLICATION_USER jmx /app/jmx
+COPY --chown=$APPLICATION_USER:$APPLICATION_USER build/libs/server.jar /app/server.jar
 WORKDIR /app
 
 EXPOSE 8080 8081 8083 8091 8092 8093
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD wget -qO- http://localhost:8080/ping || exit 1
 
 # Launch java to execute the jar with defaults intended for containers.
 ENTRYPOINT ["java", "-server", "-XX:MaxRAMPercentage=75", "-Dkotlin.script.classpath=/app/server.jar", "-Dlogback.configurationFile=/app/src/main/resources/logback.xml", "-javaagent:/app/jmx/jmx_prometheus_javaagent-1.5.0.jar=8081:/app/jmx/config.yaml", "-jar", "/app/server.jar"]
