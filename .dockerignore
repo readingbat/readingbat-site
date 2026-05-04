@@ -1,4 +1,5 @@
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-.git
-.gitignore
+*
+!build/libs/server.jar
+!src/main/resources
+!src/main/kotlin/Content.kt
+!jmx
