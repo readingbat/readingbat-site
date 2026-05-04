@@ -6,7 +6,7 @@ buildconfig = "6.0.9"
 
 # Dependencies
 logging = "8.0.02"
-readingbat = "3.1.6"
+readingbat = "3.1.7"
 kotest = "6.1.11"
 ktor = "3.4.3"
 
