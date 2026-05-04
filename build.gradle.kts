@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -11,11 +12,9 @@ plugins {
 }
 
 description = "ReadingBat Site"
-group = "com.readingbat"
-version = "3.2.1"
 
 val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
-val releaseDate = (findProperty("releaseDate") as? String) ?: LocalDate.now().format(formatter)
+val releaseDate = (findProperty("releaseDate") as? String)?.takeIf { it.isNotBlank() } ?: LocalDate.now().format(formatter)
 
 buildConfig {
   buildConfigField("String", "SITE_NAME", "\"${project.name}\"")
@@ -60,11 +59,6 @@ tasks.shadowJar {
   exclude("LICENSE*")
 }
 
-// Heroku-only
-//tasks.register("stage") {
-//  dependsOn("build")
-//}
-
 tasks.named("build") {
   mustRunAfter("clean")
 }
@@ -74,7 +68,7 @@ tasks.test {
 
   testLogging {
     events = setOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-    exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-    showStandardStreams = true
+    exceptionFormat = TestExceptionFormat.FULL
+    showStandardStreams = false
   }
 }

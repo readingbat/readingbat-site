@@ -1,18 +1,17 @@
-VERSION=$(shell grep '^version =' build.gradle.kts | sed 's/.*"\(.*\)"/\1/')
+VERSION=$(shell grep '^version=' gradle.properties | cut -d= -f2)
+
+.PHONY: default clean clean-all build tests uberjar run-uber cc run versioncheck docker-push release deploy do-log upgrade-wrapper
 
 default: versioncheck
 
 clean:
 	./gradlew clean
 
+clean-all: clean
+	rm -rf build .gradle
+
 build: clean
-	./gradlew build -PreleaseDate=04/25/2026 -xtest
-
-local-build: clean
-	./gradlew build -PuseMavenLocal=true -PreleaseDate=04/25/2026 -xtest
-
-pull:
-	git pull
+	./gradlew build -xtest
 
 tests:
 	./gradlew --rerun-tasks check
@@ -32,10 +31,6 @@ run:
 versioncheck:
 	./gradlew dependencyUpdates
 
-#distro: clean build uberjar
-
-#docker: build-docker push-docker
-
 #build-docker:
 #	docker build -t pambrose/readingbat:${VERSION} .
 #
@@ -50,7 +45,7 @@ IMAGE_NAME := pambrose/readingbat
 
 docker-push:
 	# prepare multiarch
-	docker buildx use buildx 2>/dev/null || docker buildx create --use --name=buildx
+	docker buildx use readingbat-builder 2>/dev/null || docker buildx create --use --name=readingbat-builder
 	docker buildx build --platform ${PLATFORMS} --push -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${VERSION} .
 
 release: clean build uberjar docker-push
