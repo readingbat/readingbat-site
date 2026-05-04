@@ -1,6 +1,6 @@
 services:
   readingbat0:
-    image: "pambrose/readingbat:3.2.2"
+    image: "pambrose/readingbat:3.2.3"
     restart: "always"
     env_file: docker_env_vars
     ports:
@@ -8,7 +8,7 @@ services:
       - "8081:8081"
       - "8083:8083"
   readingbat1:
-    image: "pambrose/readingbat:3.2.2"
+    image: "pambrose/readingbat:3.2.3"
     restart: "always"
     env_file: docker_env_vars
     ports:
@@ -16,7 +16,7 @@ services:
       - "8093:8083"
       - "8094:8084"
   readingbat2:
-    image: "pambrose/readingbat:3.2.2"
+    image: "pambrose/readingbat:3.2.3"
     restart: "always"
     env_file: docker_env_vars
     ports:
