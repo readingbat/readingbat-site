@@ -1,5 +1,5 @@
 /*
- *   Copyright © 2026 Paul Ambrose (pambrose@mac.com)
+ *   Copyright © 2026 Paul Ambrose
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.readingbat
 
 import com.readingbat.common.KtorProperty
 import com.readingbat.common.Property
@@ -25,6 +26,7 @@ import com.readingbat.kotest.TestSupport.forEachLanguage
 import com.readingbat.kotest.TestSupport.shouldHaveAnswer
 import com.readingbat.kotest.TestSupport.testModule
 import com.readingbat.posts.AnswerStatus
+import content
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeBlank
