@@ -1,4 +1,5 @@
 VERSION=$(shell grep '^version=' gradle.properties | cut -d= -f2)
+GRADLE_VERSION=$(shell grep '^gradle = ' gradle/libs.versions.toml | cut -d'"' -f2)
 
 .PHONY: default clean clean-all build tests uberjar run-uber cc run versioncheck docker-push release deploy do-log upgrade-wrapper
 
@@ -58,4 +59,4 @@ do-log:
 	./secrets/app-log.sh
 
 upgrade-wrapper:
-	./gradlew wrapper --gradle-version=9.5.0 --distribution-type=bin
+	./gradlew wrapper --gradle-version=$(GRADLE_VERSION) --distribution-type=bin
