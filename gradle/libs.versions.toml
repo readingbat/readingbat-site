@@ -1,4 +1,8 @@
 [versions]
+# Tooling
+gradle = "9.5.0"
+jvm = "21"
+
 # Plugins
 kotlin = "2.3.21"
 versions = "0.54.0"

@@ -18,9 +18,10 @@ val releaseDate: String =
     (findProperty("releaseDate") as? String)?.takeIf { it.isNotBlank() } ?: LocalDate.now().format(formatter)
 
 buildConfig {
-    buildConfigField("String", "SITE_NAME", "\"${project.name}\"")
-    buildConfigField("String", "SITE_VERSION", "\"${project.version}\"")
-    buildConfigField("String", "SITE_RELEASE_DATE", "\"$releaseDate\"")
+    val stringType = "String"
+    buildConfigField(stringType, "SITE_NAME", "\"${project.name}\"")
+    buildConfigField(stringType, "SITE_VERSION", "\"${project.version}\"")
+    buildConfigField(stringType, "SITE_RELEASE_DATE", "\"$releaseDate\"")
 }
 
 dependencies {
@@ -38,7 +39,7 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(libs.versions.jvm.get().toInt())
 }
 
 application {
@@ -54,10 +55,7 @@ ktor {
 tasks.shadowJar {
     isZip64 = true
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    exclude("META-INF/*.SF")
-    exclude("META-INF/*.DSA")
-    exclude("META-INF/*.RSA")
-    exclude("LICENSE*")
+    listOf("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "LICENSE*").forEach { exclude(it) }
 }
 
 tasks.named("build") {
