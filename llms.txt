@@ -1,0 +1,42 @@
+# readingbat-site
+
+> Deployable content host for [readingbat.com](https://readingbat.com). A thin
+> Kotlin/Ktor application that composes challenge content from external repos
+> and serves it via the [`readingbat-core`](https://github.com/readingbat/readingbat-core)
+> framework. The web server, persistence, and challenge runtime all live upstream
+> in `readingbat-core` — this repo provides only content composition and
+> deployment plumbing.
+
+The main entry point is `src/main/kotlin/ContentServer.kt`, which delegates to
+`ReadingBatServer.start(...)`. The content graph is assembled in
+`src/main/kotlin/Content.kt`. Tests use [Kotest](https://kotest.io) `StringSpec`
+under `src/test/kotlin/com/readingbat/`.
+
+## Docs
+
+- [README](README.md): project overview, build/run/test/deploy quickstart
+- [CLAUDE.md](CLAUDE.md): project-specific guidance for AI coding agents
+- [CHANGELOG](CHANGELOG.md): complete version history
+- [Release notes](RELEASE_NOTES.md): per-version highlights
+- [Deployment runbook](docs/release_notes.md): how to push a release to Digital Ocean
+
+## Source
+
+- [Content composition (`Content.kt`)](src/main/kotlin/Content.kt)
+- [Server entry point (`ContentServer.kt`)](src/main/kotlin/ContentServer.kt)
+- [Application config](src/main/resources/application.conf)
+- [Logback config](src/main/resources/logback.xml)
+- [Build script](build.gradle.kts)
+- [Version catalog](gradle/libs.versions.toml)
+
+## Related repos
+
+- [readingbat-core](https://github.com/readingbat/readingbat-core): the framework this site runs on
+- [readingbat-java-content](https://github.com/readingbat/readingbat-java-content): Java + Kotlin challenge content
+- [readingbat-python-content](https://github.com/readingbat/readingbat-python-content): Python challenge content
+
+## Operations
+
+- [Dockerfile](Dockerfile): `eclipse-temurin:21-jdk-alpine`, non-root, `/ping` healthcheck
+- [docker-compose.yml](docker-compose.yml): local multi-instance composition
+- [Makefile](Makefile): `make help` for the full task list
