@@ -1,62 +1,76 @@
-VERSION=$(shell grep '^version=' gradle.properties | cut -d= -f2)
-GRADLE_VERSION=$(shell grep '^gradle = ' gradle/libs.versions.toml | cut -d'"' -f2)
+.PHONY: default help clean clean-all build tests uberjar run-uber cc run versioncheck lint detekt detekt-baseline format \
+		docker-push release deploy do-log upgrade-wrapper _require-version _require-gradle-version
 
-.PHONY: default clean clean-all build tests uberjar run-uber cc run versioncheck docker-push release deploy do-log upgrade-wrapper
-
-default: versioncheck
-
-clean:
-	./gradlew clean
-
-clean-all: clean
-	rm -rf build .gradle
-
-build: clean
-	./gradlew build -xtest
-
-tests:
-	./gradlew --rerun-tasks check
-
-uberjar:
-	./gradlew buildFatJar
-
-run-uber: uberjar
-	java -jar build/libs/server.jar
-
-cc:
-	./gradlew classes --continuous -x test
-
-run:
-	./gradlew run
-
-versioncheck:
-	./gradlew dependencyUpdates
-
-#build-docker:
-#	docker build -t pambrose/readingbat:${VERSION}
-#run-docker:
-#	docker run --rm --env-file=docker_env_vars -p 8080:8080 pambrose/readingbat:${VERSION}
-
-#push-docker:
-#	docker push pambrose/readingbat:${VERSION}
+VERSION := $(shell grep -E '^version=' gradle.properties | cut -d= -f2)
+GRADLE_VERSION := $(shell grep -E '^gradle[[:space:]]*=' gradle/libs.versions.toml | sed -E 's/.*"([^"]+)".*/\1/')
 
 PLATFORMS := linux/amd64,linux/arm64
 IMAGE_NAME := pambrose/readingbat
 
-docker-push:
+default: versioncheck
+
+help: ## Show this help
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+clean: ## Remove Gradle build outputs
+	./gradlew clean
+
+clean-all: clean ## Remove Gradle build outputs and caches
+	rm -rf build .gradle
+
+build: clean ## Clean and build (skipping tests)
+	./gradlew build -x test
+
+lint: ## Run Kotlinter and detekt
+	./gradlew lintKotlin detekt
+
+format: ## Apply kotlinter formatting fixes
+	./gradlew formatKotlin
+
+detekt: ## Run detekt static analysis
+	./gradlew detekt
+
+detekt-baseline: ## Generate detekt baseline file
+	./gradlew detektBaseline
+
+tests: ## Run the full test suite
+	./gradlew --rerun-tasks check
+
+uberjar: ## Build the fat/uber JAR
+	./gradlew buildFatJar
+
+run-uber: uberjar ## Run the built uber JAR
+	java -jar build/libs/server.jar
+
+cc: ## Continuous compile (classes, skip tests)
+	./gradlew classes --continuous -x test
+
+run: ## Run the app via Gradle
+	./gradlew run
+
+versioncheck: ## Report available dependency updates
+	./gradlew dependencyUpdates
+
+docker-push: _require-version ## Build and push multi-arch Docker image
 	# prepare multiarch
 	docker buildx use readingbat-builder 2>/dev/null || docker buildx create --use --name=readingbat-builder
-	docker buildx build --platform ${PLATFORMS} --push -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${VERSION} .
+	docker buildx build --platform $(PLATFORMS) --push -t $(IMAGE_NAME):latest -t $(IMAGE_NAME):$(VERSION) .
 
-release: clean build uberjar docker-push
-	say finished app release
+release: clean build uberjar docker-push ## Clean, build, package, and push Docker image
+	@command -v say >/dev/null && say "finished app release" || true
 
-deploy:
+deploy: ## Deploy the app via secrets/deploy-app.sh
 	./secrets/deploy-app.sh
-	say finished app deployment
+	@command -v say >/dev/null && say "finished app deployment" || true
 
-do-log:
+do-log: ## Tail the deployed app log
 	./secrets/app-log.sh
 
-upgrade-wrapper:
+upgrade-wrapper: _require-gradle-version ## Upgrade the Gradle wrapper to the pinned version
 	./gradlew wrapper --gradle-version=$(GRADLE_VERSION) --distribution-type=bin
+
+_require-version:
+	@[ -n "$(VERSION)" ] || { echo "ERROR: Could not determine project version from gradle.properties" >&2; exit 1; }
+
+_require-gradle-version:
+	@[ -n "$(GRADLE_VERSION)" ] || { echo "ERROR: Could not determine gradle version from gradle/libs.versions.toml" >&2; exit 1; }

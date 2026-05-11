@@ -1,21 +1,17 @@
 [versions]
-# Tooling
 gradle = "9.5.0"
 jvm = "21"
-
-# Plugins
 kotlin = "2.3.21"
 versions = "0.54.0"
 buildconfig = "6.0.9"
-
-# Dependencies
+detekt = "2.0.0-alpha.3"
+kotlinter = "5.4.2"
 logging = "8.0.02"
 readingbat = "3.1.8"
 kotest = "6.1.11"
 ktor = "3.4.3"
 
 [libraries]
-# Dependencies
 readingbat-core = { module = "com.readingbat:readingbat-core", version.ref = "readingbat" }
 readingbat-kotest = { module = "com.readingbat:readingbat-kotest", version.ref = "readingbat" }
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "logging" }
@@ -32,3 +28,5 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 ktor-plugin = { id = "io.ktor.plugin", version.ref = "ktor" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
