@@ -30,7 +30,7 @@ import content
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeBlank
-import io.ktor.server.testing.*
+import io.ktor.server.testing.testApplication
 
 class ContentTests : StringSpec() {
   init {

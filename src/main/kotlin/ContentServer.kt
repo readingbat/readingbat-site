@@ -14,8 +14,8 @@
  *   limitations under the License.
  */
 
-import com.readingbat.readingbat_site.BuildConfig.SITE_VERSION
 import com.readingbat.server.ReadingBatServer
+import com.readingbat.site.BuildConfig.SITE_VERSION
 
 fun main(args: Array<String>) {
   ReadingBatServer.start(SITE_VERSION, args)
