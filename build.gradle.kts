@@ -49,6 +49,18 @@ kotlin {
   jvmToolchain(libs.versions.jvm.get().toInt())
 }
 
+detekt {
+  source.setFrom("src/main/kotlin", "src/test/kotlin")
+  buildUponDefaultConfig = true
+  parallel = true
+}
+
+kotlinter {
+  ignoreFormatFailures = false
+  ignoreLintFailures = false
+  reporters = arrayOf("checkstyle", "plain")
+}
+
 application {
   mainClass = "ContentServerKt"
 }
