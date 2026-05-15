@@ -1,16 +1,17 @@
 .PHONY: default help clean clean-all build tests uberjar run-uber cc run versioncheck lint detekt detekt-baseline format \
 		docker-push release deploy do-log upgrade-wrapper _require-version _require-gradle-version
 
-VERSION := $(shell grep -E '^version=' gradle.properties | cut -d= -f2)
-GRADLE_VERSION := $(shell grep -E '^gradle[[:space:]]*=' gradle/libs.versions.toml | sed -E 's/.*"([^"]+)".*/\1/')
+VERSION := $(shell sed -n 's/^version=\(.*\)/\1/p' gradle.properties)
+GRADLE_VERSION := $(shell sed -n 's/^gradle = "\(.*\)"/\1/p' gradle/libs.versions.toml)
 
 PLATFORMS := linux/amd64,linux/arm64
 IMAGE_NAME := pambrose/readingbat
 
 default: versioncheck
 
-help: ## Show this help
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+help:  ## Show this help (list of targets)
+	@awk 'BEGIN {FS = ":.*?## "; printf "Usage: make <target>\n\nTargets:\n"} \
+		/^[a-zA-Z0-9_-]+:.*?## / {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 clean: ## Remove Gradle build outputs
 	./gradlew clean
