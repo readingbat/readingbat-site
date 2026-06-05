@@ -51,7 +51,7 @@ itself. Treat that file as the single source of truth; do not pin versions in
 ./gradlew lintKotlin detekt # lint
 ./gradlew formatKotlin      # apply formatting
 ./gradlew dependencyUpdates # check for newer deps
-./gradlew wrapper --gradle-version=$(grep '^gradle = ' gradle/libs.versions.toml | cut -d'"' -f2) --distribution-type=bin
+./gradlew wrapper --gradle-version=$(grep '^gradle-wrapper = ' gradle/libs.versions.toml | cut -d'"' -f2) --distribution-type=bin
 ```
 
 `make help` lists Makefile shortcuts for the above (plus Docker/release flow).
@@ -79,7 +79,7 @@ needed.
 
 - Version lives in `gradle.properties` (`version=...`)
 - Bump version → update `CHANGELOG.md` `[Unreleased]` → add a `RELEASE_NOTES.md` entry
-- GitHub release: tag without `v` prefix (e.g. `3.2.6`), title with `v` prefix (e.g. `v3.2.6`) — see global instructions
+- GitHub release: tag without `v` prefix (e.g. `3.3.0`), title with `v` prefix (e.g. `v3.3.0`) — see global instructions
 - `docker-compose.yml` pins specific image tags; update those alongside any version bump that ships a new image
 
 ## Docker / deploy
@@ -92,6 +92,6 @@ needed.
 ## Things to remember
 
 - `readingbat-core` is the framework — site changes that look like framework work probably belong upstream
-- The `gradle` entry in `libs.versions.toml` is currently informational only; `gradle/wrapper/gradle-wrapper.properties` is what the wrapper actually uses. Keep them in sync when bumping (`make upgrade-wrapper` does this)
+- The `gradle-wrapper` entry in `libs.versions.toml` is currently informational only; `gradle/wrapper/gradle-wrapper.properties` is what the wrapper actually uses. Keep them in sync when bumping (`make upgrade-wrapper` does this)
 - The `LICENSE*` exclude in `shadowJar` is broad — be aware if you ship a dep that requires attribution at the jar root
 - `BuildConfig` is generated under `com.readingbat.site`; the `main` function is in the default package (legacy; intentional)
