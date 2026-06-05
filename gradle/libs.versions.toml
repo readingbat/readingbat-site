@@ -1,15 +1,15 @@
 [versions]
-gradle = "9.5.0"
+gradle-wrapper = "9.5.1"
 jvm = "21"
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 versions = "0.54.0"
-buildconfig = "6.0.9"
+buildconfig = "6.0.10"
 detekt = "2.0.0-alpha.3"
-kotlinter = "5.4.2"
-logging = "8.0.02"
+kotlinter = "5.5.0"
+logging = "8.0.4"
 readingbat = "3.1.8"
 kotest = "6.1.11"
-ktor = "3.4.3"
+ktor = "3.5.0"
 
 [libraries]
 readingbat-core = { module = "com.readingbat:readingbat-core", version.ref = "readingbat" }

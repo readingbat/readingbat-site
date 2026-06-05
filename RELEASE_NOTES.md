@@ -6,7 +6,7 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
-## v3.2.6 — Unreleased
+## v3.3.0 — Unreleased
 
 Tooling and build hygiene.
 
