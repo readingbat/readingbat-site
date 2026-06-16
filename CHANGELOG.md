@@ -7,17 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] — 2026-06-15
+
 ### Added
 - `.editorconfig` to standardize formatting across editors and CI
 - `detekt` and `kotlinter` plugins wired in via the version catalog
 - Self-documenting `make help` target and `make lint` / `make format` / `make detekt` shortcuts
 
 ### Changed
+- Upgraded the JVM toolchain and Docker base image to Java 25 (`eclipse-temurin:25-jdk-alpine`)
+- Bumped `readingbat-core` to 3.2.0; adapted `ContentTests` to the now-`suspend` `correctAnswers()` API
+- Bumped Kotest to 6.2.0 and detekt to 2.0.0-alpha.4
 - Build release-date field now sourced from a `ValueSource` so it stays correct under the Gradle configuration cache
 - `BuildConfig` package aligned with the rest of the codebase as `com.readingbat.site`
 - `Makefile` modernized: guarded version extraction, `.PHONY` consolidated, portable `say` fallback
 - `ContentTests` moved into the `com.readingbat` package; copyright headers tidied
 - `gradle` and `jvm` versions centralized in `libs.versions.toml`
+- Dropped the redundant explicit `application` Gradle plugin (the Ktor plugin applies it transitively)
+- Narrowed the `shadowJar` exclude so third-party `LICENSE`/attribution files are retained in `server.jar`
+- Production logging now includes an ISO-8601 timestamp and thread name
+- Corrected a `docker-compose.yml` container-port mapping (`8084` → `8081`), bumped the pinned image tags (and `machines/content/run.sh`) to 3.3.0, and synced the `machines/` JMX agent references to 1.5.0
+
+### Removed
+- Legacy Heroku deploy descriptors `Procfile` and `system.properties` — the app deploys via Docker on Digital Ocean Apps, and the JVM version now lives solely in `gradle/libs.versions.toml` and the Dockerfile base image
 
 ## [3.2.5] — 2026-05-04
 
@@ -171,7 +183,8 @@ A long maintenance series covering early production hardening. Notable threads:
 
 Project bootstrapped from `readingbat-core`'s site template.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.2.5...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.3.0...HEAD
+[3.3.0]: https://github.com/readingbat/readingbat-site/compare/3.2.5...3.3.0
 [3.2.5]: https://github.com/readingbat/readingbat-site/compare/3.2.4...3.2.5
 [3.2.4]: https://github.com/readingbat/readingbat-site/compare/3.2.3...3.2.4
 [3.2.3]: https://github.com/readingbat/readingbat-site/compare/3.2.2...3.2.3

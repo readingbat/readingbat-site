@@ -6,16 +6,23 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
-## v3.3.0 — Unreleased
+## v3.3.0 — 2026-06-15
 
-Tooling and build hygiene.
+Java 25 runtime, dependency refresh, and build hygiene.
 
+- Upgraded the JVM toolchain and Docker base image to Java 25
+  (`eclipse-temurin:25-jdk-alpine`).
+- Bumped `readingbat-core` to 3.2.0, Kotest to 6.2.0, and detekt to
+  2.0.0-alpha.4.
 - Adopt `detekt` + `kotlinter` with a shared `.editorconfig` so editors and CI
   agree on formatting.
 - Make the build safe under Gradle's configuration cache by switching the
   release-date field to a `ValueSource`.
 - Centralize `gradle` and `jvm` versions in `libs.versions.toml`; modernize the
   `Makefile` with a self-documenting `help` target and portable fallbacks.
+- Remove the legacy Heroku deploy descriptors (`Procfile`, `system.properties`);
+  the app deploys via Docker on Digital Ocean Apps.
+- Production logs now carry an ISO-8601 timestamp and thread name.
 
 ## v3.2.5 — 2026-05-04
 

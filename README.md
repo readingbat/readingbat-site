@@ -1,8 +1,8 @@
 # ReadingBat Site
 
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![JDK](https://img.shields.io/badge/JDK-21-007396.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
-[![Ktor](https://img.shields.io/badge/Ktor-3.4-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
+[![JDK](https://img.shields.io/badge/JDK-25-007396.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
+[![Ktor](https://img.shields.io/badge/Ktor-3.5-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
 [![Gradle](https://img.shields.io/badge/Gradle-9.5-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
 [![License](https://img.shields.io/github/license/readingbat/readingbat-site.svg)](LICENSE.txt)
 [![GitHub release](https://img.shields.io/github/v/release/readingbat/readingbat-site.svg?logo=github)](https://github.com/readingbat/readingbat-site/releases)
@@ -29,7 +29,7 @@ which is consumed here as a binary dependency. What lives in this repo is the
 
 ## Requirements
 
-- JDK 21 (the Gradle toolchain will resolve one via [foojay](https://foojay.io/) if you don't already have it)
+- JDK 25 (the Gradle toolchain will resolve one via [foojay](https://foojay.io/) if you don't already have it)
 - Docker + `buildx` (only needed for releases)
 
 All other versions — Gradle, Kotlin, Ktor, plugins — are pinned in
@@ -84,7 +84,7 @@ make upgrade-wrapper         # bump the Gradle wrapper to the catalog-pinned ver
 
 ## Docker
 
-The image is built from `eclipse-temurin:21-jdk-alpine`, runs as a non-root
+The image is built from `eclipse-temurin:25-jdk-alpine`, runs as a non-root
 `readingbat` user, and declares a `HEALTHCHECK` on `/ping`. `make release`
 publishes a multi-arch (`linux/amd64,linux/arm64`) image to
 `pambrose/readingbat:{latest,$VERSION}`.
@@ -95,12 +95,14 @@ A multi-instance local composition is provided in
 ## Releasing and deploying
 
 1. Bump `version=` in `gradle.properties`.
-2. Move `[Unreleased]` entries in [`CHANGELOG.md`](CHANGELOG.md) under the new
+2. Bump the pinned image tags in [`docker-compose.yml`](docker-compose.yml) and
+   `machines/content/run.sh` to the new version.
+3. Move `[Unreleased]` entries in [`CHANGELOG.md`](CHANGELOG.md) under the new
    version and add a highlights entry to [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
-3. `make release` to build and push the Docker image.
-4. Follow the runbook in [`docs/release_notes.md`](docs/release_notes.md) to
+4. `make release` to build and push the Docker image.
+5. Follow the runbook in [`docs/release_notes.md`](docs/release_notes.md) to
    roll the deployment on Digital Ocean.
-5. Cut a GitHub release: tag `X.Y.Z` (no `v` prefix), title `vX.Y.Z`.
+6. Cut a GitHub release: tag `X.Y.Z` (no `v` prefix), title `vX.Y.Z`.
 
 ## Project conventions
 

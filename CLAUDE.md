@@ -80,18 +80,18 @@ needed.
 - Version lives in `gradle.properties` (`version=...`)
 - Bump version → update `CHANGELOG.md` `[Unreleased]` → add a `RELEASE_NOTES.md` entry
 - GitHub release: tag without `v` prefix (e.g. `3.3.0`), title with `v` prefix (e.g. `v3.3.0`) — see global instructions
-- `docker-compose.yml` pins specific image tags; update those alongside any version bump that ships a new image
+- `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image
 
 ## Docker / deploy
 
-- `Dockerfile` uses `eclipse-temurin:21-jdk-alpine`, runs as non-root `readingbat` user, exposes 8080/8081/8083/8091-8093, and has a `HEALTHCHECK` on `/ping`
+- `Dockerfile` uses `eclipse-temurin:25-jdk-alpine`, runs as non-root `readingbat` user, exposes 8080/8081/8083/8091-8093, and has a `HEALTHCHECK` on `/ping`
 - `make release` builds and pushes multi-arch images (`linux/amd64,linux/arm64`) to `pambrose/readingbat:{latest,$VERSION}`
-- Deploy target is Digital Ocean Apps; runbook is in `docs/release_notes.md`
+- Deploy target is Digital Ocean Apps (Docker only — no Heroku); runbook is in `docs/release_notes.md`
 - `make deploy` runs `./secrets/deploy-app.sh`
 
 ## Things to remember
 
 - `readingbat-core` is the framework — site changes that look like framework work probably belong upstream
 - The `gradle-wrapper` entry in `libs.versions.toml` is currently informational only; `gradle/wrapper/gradle-wrapper.properties` is what the wrapper actually uses. Keep them in sync when bumping (`make upgrade-wrapper` does this)
-- The `LICENSE*` exclude in `shadowJar` is broad — be aware if you ship a dep that requires attribution at the jar root
+- `shadowJar` relies on `DuplicatesStrategy.EXCLUDE` to resolve duplicate license/metadata collisions; it no longer wildcard-excludes `LICENSE*`, so third-party attribution files are preserved in `server.jar`
 - `BuildConfig` is generated under `com.readingbat.site`; the `main` function is in the default package (legacy; intentional)

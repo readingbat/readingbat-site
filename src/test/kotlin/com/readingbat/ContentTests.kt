@@ -31,6 +31,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeBlank
 import io.ktor.server.testing.testApplication
+import kotlinx.coroutines.runBlocking
 
 class ContentTests : StringSpec() {
   init {
@@ -73,7 +74,7 @@ class ContentTests : StringSpec() {
           forEachGroup {
             forEachChallenge {
               forEachAnswer {
-                it shouldHaveAnswer correctAnswers[it.index]
+                runBlocking { it shouldHaveAnswer correctAnswers()[it.index] }
               }
             }
           }

@@ -4,7 +4,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 plugins {
-  application
+  // `application` is applied transitively by the Ktor plugin (io.ktor.plugin), which also wires
+  // up `mainClass`, `run`, and `buildFatJar`; no need to declare it explicitly.
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.ktor.plugin)
   alias(libs.plugins.versions)
@@ -74,7 +75,7 @@ ktor {
 tasks.shadowJar {
   isZip64 = true
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-  listOf("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "LICENSE*").forEach { exclude(it) }
+  listOf("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA").forEach { exclude(it) }
 }
 
 tasks.test {
