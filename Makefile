@@ -52,7 +52,7 @@ run: ## Run the app via Gradle
 versions: ## Report available dependency updates
 	./gradlew dependencyUpdates --no-configuration-cache --no-parallel
 
-docker-push: _require-version ## Build and push multi-arch Docker image
+docker-push: _require-version build ## Build and push multi-arch Docker image
 	# prepare multiarch
 	docker buildx use readingbat-builder 2>/dev/null || docker buildx create --use --name=readingbat-builder
 	docker buildx build --platform $(PLATFORMS) --push -t $(IMAGE_NAME):latest -t $(IMAGE_NAME):$(VERSION) .
@@ -67,7 +67,11 @@ deploy: ## Deploy the app via secrets/deploy-app.sh
 do-log: ## Tail the deployed app log
 	./secrets/app-log.sh
 
-upgrade-wrapper: _require-gradle-version ## Upgrade the Gradle wrapper to the pinned version
+upgrade-wrapper: _require-gradle-version ## Upgrade the Gradle wrapper to the catalog version
+	# Gradle's documented upgrade procedure: the first run rewrites
+	# gradle-wrapper.properties using the *old* wrapper jar; the second run
+	# regenerates the wrapper itself with the new version.
+	./gradlew wrapper --gradle-version=$(GRADLE_VERSION) --distribution-type=bin
 	./gradlew wrapper --gradle-version=$(GRADLE_VERSION) --distribution-type=bin
 
 _require-version:

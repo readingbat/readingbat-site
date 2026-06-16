@@ -37,6 +37,6 @@ under `src/test/kotlin/com/readingbat/`.
 
 ## Operations
 
-- [Dockerfile](Dockerfile): `eclipse-temurin:21-jdk-alpine`, non-root, `/ping` healthcheck
+- [Dockerfile](Dockerfile): `eclipse-temurin:25-jdk-alpine`, non-root, `/ping` healthcheck
 - [docker-compose.yml](docker-compose.yml): local multi-instance composition
 - [Makefile](Makefile): `make help` for the full task list

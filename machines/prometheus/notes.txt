@@ -12,4 +12,4 @@ jmx                               notes.txt             run.sh
 node_exporter-0.17.0.linux-amd64  prometheus-proxy.jar  simple.conf
 
 jmx/
-config.yaml  jmx_prometheus_javaagent-0.13.0.jar
+config.yaml  jmx_prometheus_javaagent-1.5.0.jar
