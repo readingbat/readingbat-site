@@ -52,7 +52,7 @@ run: ## Run the app via Gradle
 versions: ## Report available dependency updates
 	./gradlew dependencyUpdates --no-configuration-cache --no-parallel
 
-docker-push: _require-version build ## Build and push multi-arch Docker image
+docker-push: _require-version uberjar ## Build and push multi-arch Docker image
 	# prepare multiarch
 	docker buildx use readingbat-builder 2>/dev/null || docker buildx create --use --name=readingbat-builder
 	docker buildx build --platform $(PLATFORMS) --push -t $(IMAGE_NAME):latest -t $(IMAGE_NAME):$(VERSION) .
