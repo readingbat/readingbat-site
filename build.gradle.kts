@@ -104,7 +104,7 @@ fun Project.configureShadowJar() {
   tasks.shadowJar {
     isZip64 = true
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    listOf("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA").forEach { exclude(it) }
+    exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
   }
 }
 
