@@ -95,3 +95,5 @@ needed.
 - The `gradle-wrapper` entry in `libs.versions.toml` is currently informational only; `gradle/wrapper/gradle-wrapper.properties` is what the wrapper actually uses. Keep them in sync when bumping (`make upgrade-wrapper` does this)
 - `shadowJar` relies on `DuplicatesStrategy.EXCLUDE` to resolve duplicate license/metadata collisions; it no longer wildcard-excludes `LICENSE*`, so third-party attribution files are preserved in `server.jar`
 - `BuildConfig` is generated under `com.readingbat.site`; the `main` function is in the default package (legacy; intentional)
+- `build.gradle.kts` groups plugin/extension setup into `Project.configure*` helpers; keep new configuration in that shape rather than adding loose top-level blocks
+- The Kotlin unused-return-value checker (`-Xreturn-value-checker=check`) is applied to `compileKotlin` (main) only. Do not extend it to the test source set — Kotest's assertion DSL returns its receiver, so checking tests emits only false positives
