@@ -3,7 +3,7 @@
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![JDK](https://img.shields.io/badge/JDK-25-007396.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
 [![Ktor](https://img.shields.io/badge/Ktor-3.5-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
-[![Gradle](https://img.shields.io/badge/Gradle-9.5-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
+[![Gradle](https://img.shields.io/badge/Gradle-9.6-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
 [![License](https://img.shields.io/github/license/readingbat/readingbat-site.svg)](LICENSE.txt)
 [![GitHub release](https://img.shields.io/github/v/release/readingbat/readingbat-site.svg?logo=github)](https://github.com/readingbat/readingbat-site/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/pambrose/readingbat.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/pambrose/readingbat)

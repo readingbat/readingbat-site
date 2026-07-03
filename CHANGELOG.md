@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.1] — 2026-07-03
+
+### Added
+- Enabled Kotlin's unused-return-value checker (`-Xreturn-value-checker=check`) on the main source set. It is deliberately left off the test source set, where Kotest's assertion DSL returns its receiver and tests discard that result by design.
+
+### Changed
+- Reorganized `build.gradle.kts` into focused `Project.configure*` helpers (Kotlin, Detekt, Kotlinter, Ktor, `shadowJar`, `test`, dependency-updates)
+- Bumped Ktor to 3.5.1, Kotest to 6.2.1, and detekt to 2.0.0-alpha.5
+- Upgraded the Gradle wrapper to 9.6.1
+
 ## [3.3.0] — 2026-06-15
 
 ### Added
@@ -183,7 +193,8 @@ A long maintenance series covering early production hardening. Notable threads:
 
 Project bootstrapped from `readingbat-core`'s site template.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.3.0...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.3.1...HEAD
+[3.3.1]: https://github.com/readingbat/readingbat-site/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/readingbat/readingbat-site/compare/3.2.5...3.3.0
 [3.2.5]: https://github.com/readingbat/readingbat-site/compare/3.2.4...3.2.5
 [3.2.4]: https://github.com/readingbat/readingbat-site/compare/3.2.3...3.2.4

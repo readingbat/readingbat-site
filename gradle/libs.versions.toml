@@ -1,14 +1,14 @@
 [versions]
 buildconfig = "6.0.10"
-detekt = "2.0.0-alpha.4"
-gradle-wrapper = "9.5.1"
+detekt = "2.0.0-alpha.5"
+gradle-wrapper = "9.6.1"
 jvm = "25"
-kotest = "6.2.0"
+kotest = "6.2.1"
 kotlin = "2.4.0"
 kotlinter = "5.5.0"
-ktor = "3.5.0"
+ktor = "3.5.1"
 logging = "8.0.4"
-readingbat = "3.2.0"
+readingbat = "3.2.1"
 versions = "0.54.0"
 
 [libraries]

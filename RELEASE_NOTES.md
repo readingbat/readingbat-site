@@ -6,6 +6,16 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.3.1 — 2026-07-03
+
+Dependency refresh and build-script cleanup.
+
+- Bumped Ktor to 3.5.1, Kotest to 6.2.1, and detekt to 2.0.0-alpha.5; upgraded
+  the Gradle wrapper to 9.6.1.
+- Reorganized `build.gradle.kts` into focused `Project.configure*` helpers.
+- Enabled Kotlin's unused-return-value checker on production code — kept off the
+  test sources, where Kotest's fluent assertions would trigger false positives.
+
 ## v3.3.0 — 2026-06-15
 
 Java 25 runtime, dependency refresh, and build hygiene.
