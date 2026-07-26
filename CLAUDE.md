@@ -24,6 +24,7 @@ class `ContentServerKt`), which simply hands control to `ReadingBatServer.start(
 ## Layout
 
 ```
+.github/workflows/ci.yml            # GitHub Actions CI (build + test + lint)
 src/main/kotlin/Content.kt          # top-level content composition
 src/main/kotlin/ContentServer.kt    # main() entry point
 src/main/resources/application.conf # Ktor/HOCON config
@@ -61,6 +62,14 @@ The release-date `BuildConfig` field is sourced from a `ValueSource` so it is
 re-evaluated each build instead of being frozen by the cache — keep that pattern
 when adding any build-time-dynamic config.
 
+## CI
+
+`.github/workflows/ci.yml` runs on pushes and pull requests targeting `master`. It sets up
+JDK 25 (Temurin) via `actions/setup-java`, wires Gradle caching via
+`gradle/actions/setup-gradle`, then runs a single `./gradlew build`. Because `detekt` and
+`lintKotlin` both attach to `check`, that one command covers compile, tests, and lint — keep
+new verification tasks wired into `check` so CI picks them up without a workflow edit.
+
 ## Tests
 
 Use [Kotest](https://kotest.io) `StringSpec` with an `init {}` block (matches the user's
@@ -93,7 +102,7 @@ needed.
 
 - `readingbat-core` is the framework — site changes that look like framework work probably belong upstream
 - The `gradle-wrapper` entry in `libs.versions.toml` is currently informational only; `gradle/wrapper/gradle-wrapper.properties` is what the wrapper actually uses. Keep them in sync when bumping (`make upgrade-wrapper` does this)
-- `shadowJar` relies on `DuplicatesStrategy.EXCLUDE` to resolve duplicate license/metadata collisions; it no longer wildcard-excludes `LICENSE*`, so third-party attribution files are preserved in `server.jar`
+- `shadowJar` relies on `DuplicatesStrategy.EXCLUDE` to resolve duplicate license/metadata collisions; it no longer wildcard-excludes `LICENSE*`, so third-party attribution files are preserved in `server.jar`. The jar-signature excludes are a single vararg `exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")` — add new patterns to that call rather than stacking separate `exclude` lines
 - `BuildConfig` is generated under `com.readingbat.site`; the `main` function is in the default package (legacy; intentional)
 - `build.gradle.kts` groups plugin/extension setup into `Project.configure*` helpers; keep new configuration in that shape rather than adding loose top-level blocks
 - The Kotlin unused-return-value checker (`-Xreturn-value-checker=check`) is applied to `compileKotlin` (main) only. Do not extend it to the test source set — Kotest's assertion DSL returns its receiver, so checking tests emits only false positives

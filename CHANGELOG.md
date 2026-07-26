@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.2] — 2026-07-26
+
+### Added
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`) that builds, tests, and lints on JDK 25 (Temurin) for pushes and pull requests
+
+### Changed
+- Bumped `readingbat-core` to 3.3.0, Kotlin to 2.4.10, Kotest to 6.2.3, and kotlinter to 5.6.0
+- Simplified the `shadowJar` signature-file excludes to a single vararg call
+- Bumped the pinned image tags in `docker-compose.yml` and `machines/content/run.sh` to 3.3.2
+
 ## [3.3.1] — 2026-07-03
 
 ### Added
@@ -193,7 +203,8 @@ A long maintenance series covering early production hardening. Notable threads:
 
 Project bootstrapped from `readingbat-core`'s site template.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.3.1...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.3.2...HEAD
+[3.3.2]: https://github.com/readingbat/readingbat-site/compare/3.3.1...3.3.2
 [3.3.1]: https://github.com/readingbat/readingbat-site/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/readingbat/readingbat-site/compare/3.2.5...3.3.0
 [3.2.5]: https://github.com/readingbat/readingbat-site/compare/3.2.4...3.2.5

@@ -6,6 +6,16 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.3.2 — 2026-07-26
+
+CI automation and a dependency refresh.
+
+- Added a GitHub Actions workflow that builds, tests, and lints every push and
+  pull request on JDK 25 (Temurin).
+- Bumped `readingbat-core` to 3.3.0, Kotlin to 2.4.10, Kotest to 6.2.3, and
+  kotlinter to 5.6.0.
+- Simplified the `shadowJar` signature-file excludes to a single vararg call.
+
 ## v3.3.1 — 2026-07-03
 
 Dependency refresh and build-script cleanup.
