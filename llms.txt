@@ -37,6 +37,7 @@ under `src/test/kotlin/com/readingbat/`.
 
 ## Operations
 
+- [CI workflow](.github/workflows/ci.yml): GitHub Actions — builds, tests, and lints on JDK 25 for pushes and PRs
 - [Dockerfile](Dockerfile): `eclipse-temurin:25-jdk-alpine`, non-root, `/ping` healthcheck
 - [docker-compose.yml](docker-compose.yml): local multi-instance composition
 - [Makefile](Makefile): `make help` for the full task list

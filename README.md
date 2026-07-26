@@ -1,5 +1,6 @@
 # ReadingBat Site
 
+[![CI](https://github.com/readingbat/readingbat-site/actions/workflows/ci.yml/badge.svg)](https://github.com/readingbat/readingbat-site/actions/workflows/ci.yml)
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![JDK](https://img.shields.io/badge/JDK-25-007396.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
 [![Ktor](https://img.shields.io/badge/Ktor-3.5-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
@@ -56,6 +57,13 @@ metrics — see the [`Dockerfile`](Dockerfile) for the full list.
 
 Tests use [Kotest](https://kotest.io) `StringSpec`. Test sources live under
 `src/test/kotlin/com/readingbat/`.
+
+## Continuous integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push and pull
+request against `master`. It builds, tests, and lints on JDK 25 (Temurin) with a
+single `./gradlew build` — `detekt` and `lintKotlin` both attach to `check`, so
+that one command is the same verification you get locally.
 
 ## Lint and format
 
