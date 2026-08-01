@@ -114,9 +114,9 @@ A multi-instance local composition is provided in
 
 ## Project conventions
 
-See [`CLAUDE.md`](CLAUDE.md) for repo conventions (layout, version-catalog
-discipline, Kotest patterns, configuration-cache safety) — useful for both
-humans and AI coding agents.
+See [`CLAUDE.md`](CLAUDE.md) for repo conventions (version-catalog discipline,
+configuration-cache safety, `shadowJar` duplicate handling, and the gotchas that
+the code alone won't teach you) — useful for both humans and AI coding agents.
 
 ## License
 
