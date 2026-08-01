@@ -8,8 +8,8 @@ kotlin = "2.4.10"
 kotlinter = "5.6.0"
 ktor = "3.5.1"
 logging = "8.0.4"
-readingbat = "3.3.0"
-versions = "0.54.0"
+readingbat = "3.3.1"
+versions = "0.57.0"
 
 [libraries]
 readingbat-core = { module = "com.readingbat:readingbat-core", version.ref = "readingbat" }
@@ -25,7 +25,7 @@ ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref 
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+versions = { id = "io.github.ben-manes.versions", version.ref = "versions" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 ktor-plugin = { id = "io.ktor.plugin", version.ref = "ktor" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
