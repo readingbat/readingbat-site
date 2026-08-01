@@ -6,6 +6,18 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.3.3 — 2026-08-01
+
+Dependency refresh and leaner agent guidance.
+
+- Bumped `readingbat-core` to 3.3.1.
+- Bumped the Gradle versions plugin to 0.57.0, which relocated its plugin ID
+  from `com.github.ben-manes.versions` to `io.github.ben-manes.versions`.
+- Trimmed `CLAUDE.md` of guidance derivable from the repo itself — the directory
+  layout, the standard `./gradlew` invocations, and the CI/Dockerfile/editorconfig
+  restatements — keeping the gotchas, design rationale, and non-standard
+  conventions.
+
 ## v3.3.2 — 2026-07-26
 
 CI automation and a dependency refresh.

@@ -52,6 +52,7 @@ add new file types.
 
 - Bump version → update `CHANGELOG.md` `[Unreleased]` → add a `RELEASE_NOTES.md` entry
 - `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image
+- `README.md`'s "Project conventions" section summarizes what *this* file covers — if you add or drop a section here, check that summary still matches
 
 ## Docker / deploy
 
