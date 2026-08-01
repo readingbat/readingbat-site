@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Bumped `readingbat-core` to 3.3.1
+- Bumped the Gradle versions plugin to 0.57.0, whose plugin ID moved from `com.github.ben-manes.versions` to `io.github.ben-manes.versions`
+- Trimmed `CLAUDE.md` of guidance derivable from the repo itself (directory layout, standard Gradle invocations, the CI workflow restatement, and lint/Docker file summaries), keeping the gotchas, design rationale, and non-standard conventions
+
 ## [3.3.2] — 2026-07-26
 
 ### Added
