@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.0] — 2026-09-21
+
+### Added
+- `.gitattributes` to normalize line endings in the repository. Text files are stored and checked out with LF so `gradlew`, `machines/**/*.sh`, and the `Dockerfile` stay executable on Linux and in Docker regardless of a contributor's `core.autocrlf`; `*.bat` is checked out with CRLF, and `*.jar` is marked binary
+
+### Changed
+- Bumped `readingbat-core` to 3.4.0
+- Bumped Ktor to 3.6.0, Kotest to 6.2.5, detekt to 2.0.0-alpha.6, kotlinter to 5.7.0, the BuildConfig plugin to 6.1.1, and the Gradle versions plugin to 0.64.0
+- Upgraded the Gradle wrapper to 9.7.1
+- Bumped the pinned image tags in `docker-compose.yml` and `machines/content/run.sh` to 3.4.0
+
+### Fixed
+- Corrected the changelog compare links: versions that predate the current tagging convention (3.1.5, 3.1.4, 3.1.2, 3.1.0, 3.0.0, and the 1.x/2.x entries) were never tagged, so their links pointed at refs that do not exist. Those links are dropped and the remaining ones compare against the nearest tag that exists
+
 ## [3.3.3] — 2026-08-01
 
 ### Changed
@@ -210,7 +224,15 @@ A long maintenance series covering early production hardening. Notable threads:
 
 Project bootstrapped from `readingbat-core`'s site template.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.3.3...HEAD
+---
+
+Versions above without a compare link (3.1.5, 3.1.4, 3.1.2, 3.1.0, 3.0.0, and the 1.x/2.x
+entries) predate the current tagging convention and were never tagged in git, so there is no
+diff to link to. The entries below skip those versions and compare against the nearest
+tag that exists.
+
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.4.0...HEAD
+[3.4.0]: https://github.com/readingbat/readingbat-site/compare/3.3.3...3.4.0
 [3.3.3]: https://github.com/readingbat/readingbat-site/compare/3.3.2...3.3.3
 [3.3.2]: https://github.com/readingbat/readingbat-site/compare/3.3.1...3.3.2
 [3.3.1]: https://github.com/readingbat/readingbat-site/compare/3.3.0...3.3.1
@@ -220,14 +242,6 @@ Project bootstrapped from `readingbat-core`'s site template.
 [3.2.3]: https://github.com/readingbat/readingbat-site/compare/3.2.2...3.2.3
 [3.2.2]: https://github.com/readingbat/readingbat-site/compare/3.2.1...3.2.2
 [3.2.1]: https://github.com/readingbat/readingbat-site/compare/3.2.0...3.2.1
-[3.2.0]: https://github.com/readingbat/readingbat-site/compare/3.1.5...3.2.0
-[3.1.5]: https://github.com/readingbat/readingbat-site/compare/3.1.4...3.1.5
-[3.1.4]: https://github.com/readingbat/readingbat-site/compare/3.1.3...3.1.4
-[3.1.3]: https://github.com/readingbat/readingbat-site/compare/3.1.2...3.1.3
-[3.1.2]: https://github.com/readingbat/readingbat-site/compare/3.1.1...3.1.2
-[3.1.1]: https://github.com/readingbat/readingbat-site/compare/3.1.0...3.1.1
-[3.1.0]: https://github.com/readingbat/readingbat-site/compare/3.0.0...3.1.0
-[3.0.0]: https://github.com/readingbat/readingbat-site/compare/2.1.0...3.0.0
-[2.1.0]: https://github.com/readingbat/readingbat-site/compare/2.0.3...2.1.0
-[2.0.3]: https://github.com/readingbat/readingbat-site/compare/2.0.0...2.0.3
-[2.0.0]: https://github.com/readingbat/readingbat-site/releases/tag/2.0.0
+[3.2.0]: https://github.com/readingbat/readingbat-site/compare/3.1.3...3.2.0
+[3.1.3]: https://github.com/readingbat/readingbat-site/compare/3.1.1...3.1.3
+[3.1.1]: https://github.com/readingbat/readingbat-site/compare/1.13.0...3.1.1

@@ -6,6 +6,20 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.4.0 — 2026-09-21
+
+Dependency refresh and line-ending hygiene.
+
+- Bumped `readingbat-core` to 3.4.0.
+- Bumped Ktor to 3.6.0, Kotest to 6.2.5, detekt to 2.0.0-alpha.6, kotlinter to
+  5.7.0, the BuildConfig plugin to 6.1.1, and the Gradle versions plugin to
+  0.64.0; upgraded the Gradle wrapper to 9.7.1.
+- Added `.gitattributes` so text files are stored and checked out with LF,
+  keeping `gradlew` and `machines/**/*.sh` executable on Linux and in Docker no
+  matter how a contributor has `core.autocrlf` set.
+- Fixed the changelog compare links that pointed at tags which were never
+  created.
+
 ## v3.3.3 — 2026-08-01
 
 Dependency refresh and leaner agent guidance.
