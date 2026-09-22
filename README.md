@@ -3,8 +3,8 @@
 [![CI](https://github.com/readingbat/readingbat-site/actions/workflows/ci.yml/badge.svg)](https://github.com/readingbat/readingbat-site/actions/workflows/ci.yml)
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![JDK](https://img.shields.io/badge/JDK-25-007396.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
-[![Ktor](https://img.shields.io/badge/Ktor-3.5-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
-[![Gradle](https://img.shields.io/badge/Gradle-9.6-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
+[![Ktor](https://img.shields.io/badge/Ktor-3.6-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
+[![Gradle](https://img.shields.io/badge/Gradle-9.7-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
 [![License](https://img.shields.io/github/license/readingbat/readingbat-site.svg)](LICENSE.txt)
 [![GitHub release](https://img.shields.io/github/v/release/readingbat/readingbat-site.svg?logo=github)](https://github.com/readingbat/readingbat-site/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/pambrose/readingbat.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/pambrose/readingbat)
@@ -72,7 +72,11 @@ that one command is the same verification you get locally.
 ./gradlew formatKotlin       # apply ktlint fixes
 ```
 
-Project formatting rules are in [`.editorconfig`](.editorconfig).
+Project formatting rules are in [`.editorconfig`](.editorconfig). Line endings are
+normalized by [`.gitattributes`](.gitattributes): text files are stored and checked
+out with LF (`*.bat` is the sole CRLF exception), so `gradlew` and the `machines/`
+shell scripts stay runnable on Linux and in Docker regardless of your
+`core.autocrlf` setting.
 
 ## Makefile shortcuts
 

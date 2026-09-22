@@ -48,11 +48,20 @@ The shared test helpers come from `com.readingbat:readingbat-kotest`.
 Keep both the indent style and the disabled ktlint rules in `.editorconfig` in sync if you
 add new file types.
 
+`.gitattributes` enforces on the git side what `.editorconfig`'s `end_of_line = lf` only
+asks of editors — it matters because CRLF would break `gradlew` and `machines/**/*.sh` on
+Linux and in Docker. `*.bat` is the sole CRLF exception; keep the two files in sync.
+
 ## Versioning and releases
 
 - Bump version → update `CHANGELOG.md` `[Unreleased]` → add a `RELEASE_NOTES.md` entry
 - `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image
 - `README.md`'s "Project conventions" section summarizes what *this* file covers — if you add or drop a section here, check that summary still matches
+- Not every `CHANGELOG.md` version has a compare link. The pre-3.1.1 history and a few 3.1.x
+  entries were never tagged, so the link list deliberately skips them and compares against the
+  nearest tag that *does* exist — don't "restore" links to tags that aren't in `git tag`
+- The README badges hard-code the Ktor and Gradle minor versions; refresh them when
+  `libs.versions.toml` moves
 
 ## Docker / deploy
 

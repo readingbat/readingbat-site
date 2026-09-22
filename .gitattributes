@@ -1,0 +1,11 @@
+# Git-side counterpart to end_of_line = lf in .editorconfig.
+# Everything git detects as text is stored and checked out with LF, so gradlew,
+# machines/**/*.sh, and the Dockerfile stay executable on Linux and inside Docker
+# regardless of a contributor's core.autocrlf setting.
+* text=auto eol=lf
+
+# ...except Windows batch files, which cmd.exe expects with CRLF.
+*.bat text eol=crlf
+
+# Never normalize or diff binaries (gradle-wrapper.jar, jmx_prometheus_javaagent).
+*.jar binary
