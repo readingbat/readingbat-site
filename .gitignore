@@ -15,6 +15,10 @@ bin/
 .DS_Store
 
 docker_env_vars
+
+# Heap dumps, should anyone bind-mount one locally: a full copy of live memory, so they
+# carry session secrets, database credentials and user data
+dumps/
 login-info.txt
 *.iml
 *.ipr
