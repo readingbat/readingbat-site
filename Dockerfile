@@ -7,12 +7,9 @@ ENV APPLICATION_USER=readingbat
 ENV AGENT_CONFIG=/app/src/main/resources/application.conf
 
 # Capture a heap dump if the JVM dies of an OOM: a dump taken at the moment it happens is the only
-# thing that says what was holding memory, and the flags cost nothing until then. One known source is
-# readingbat-core#128 -- each challenge evaluation retains a classloader holding every jar on
-# kotlin.script.classpath open -- but because -Dkotlin.script.classpath below names a single jar,
-# that costs this image only about 20 KB per eval, so an OOM here is more likely something else. /app/dumps is a mount point --
-# without a volume behind it the dump dies with the container. Note a dump is roughly the size of
-# the live heap, and MaxRAMPercentage below allows 75% of the machine's RAM.
+# thing that says what was holding memory, and the flags cost nothing until then. /app/dumps is a
+# mount point -- without a volume behind it the dump dies with the container. Note a dump is roughly
+# the size of the live heap, and MaxRAMPercentage below allows 75% of the machine's RAM.
 ENV JAVA_TOOL_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/dumps"
 
 # Then add the user, create the /app folder and give permissions to our user.
