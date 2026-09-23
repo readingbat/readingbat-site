@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Heap dumps on `OutOfMemoryError`. The image now sets
+  `JAVA_TOOL_OPTIONS=-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/dumps`, and both
+  `docker-compose.yml` and `machines/content/run.sh` mount a named volume there so a dump outlives the
+  container that produced it. Named rather than bind mounts because Docker creates a missing bind-mount
+  directory as root while the image runs as uid 1000; one volume per composed service because each
+  container is pid 1 and they would otherwise overwrite each other's `java_pid1.hprof`. A dump is the
+  only record of what was holding memory at the moment of an OOM. It is also a copy of live memory,
+  so it carries secrets and user data — treat the file as a secret
+
 ## [3.4.0] — 2026-09-21
 
 ### Added

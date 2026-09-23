@@ -104,6 +104,27 @@ publishes a multi-arch (`linux/amd64,linux/arm64`) image to
 A multi-instance local composition is provided in
 [`docker-compose.yml`](docker-compose.yml).
 
+The image sets `JAVA_TOOL_OPTIONS` to write a heap dump on `OutOfMemoryError`, into
+`/app/dumps`, and each composed service gets its own **named volume** there. Two reasons it
+is a named volume rather than a bind mount: Docker creates a missing bind-mount directory as
+`root` while the container runs as uid 1000, so the JVM could not write the dump, whereas a
+named volume is initialized from the image's own `/app/dumps` and inherits its `readingbat`
+ownership. And one volume per service, because each container is pid 1 in its own namespace —
+a shared volume would have all three writing `java_pid1.hprof` over each other.
+
+Retrieve a dump with:
+
+```bash
+docker run --rm -v readingbat-site_readingbat0-dumps:/dumps -v "$PWD":/out \
+  alpine cp /dumps/java_pid1.hprof /out/
+```
+
+Two things to know. A dump is roughly the size of the live heap, and `MaxRAMPercentage=75`
+allows that to be most of the machine's RAM — keep an eye on disk. And a dump is a copy of
+live memory: it contains session secrets, database credentials and user data, so treat the
+file itself as a secret. Setting `JAVA_TOOL_OPTIONS` in `docker_env_vars` overrides the image
+default, since `env_file` wins over `ENV`.
+
 ## Releasing and deploying
 
 1. Bump `version=` in `gradle.properties`.
