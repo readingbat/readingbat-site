@@ -13,10 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `docker-compose.yml` and `machines/content/run.sh` mount a named volume there so a dump outlives the
   container that produced it. Named rather than bind mounts because Docker creates a missing bind-mount
   directory as root while the image runs as uid 1000; one volume per composed service because each
-  container is pid 1 and they would otherwise overwrite each other's `java_pid1.hprof`. Challenge evaluation in `readingbat-core` retains
-  ~1.3 MB of heap per eval and never releases it (readingbat/readingbat-core#128), so an OOM is a
-  question about what was holding memory that only a dump can answer. A dump is a copy of live memory,
-  so it carries secrets and user data — treat the file as a secret
+  container is pid 1 and they would otherwise overwrite each other's `java_pid1.hprof`. A dump is the
+  only record of what was holding memory at the moment of an OOM. One known leak is
+  readingbat/readingbat-core#128, where each challenge evaluation retains a classloader holding every
+  jar on `kotlin.script.classpath` open; this image points that at a single jar, so it costs about
+  20 KB per eval here rather than the ~1 MB seen on a many-jar dev classpath. A dump is a copy of live
+  memory, so it carries secrets and user data — treat the file as a secret
 
 ## [3.4.0] — 2026-09-21
 
