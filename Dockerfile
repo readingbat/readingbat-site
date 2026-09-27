@@ -6,8 +6,14 @@ ENV APPLICATION_USER=readingbat
 
 ENV AGENT_CONFIG=/app/src/main/resources/application.conf
 
+# Capture a heap dump if the JVM dies of an OOM: a dump taken at the moment it happens is the only
+# thing that says what was holding memory, and the flags cost nothing until then. /app/dumps is a
+# mount point -- without a volume behind it the dump dies with the container. Note a dump is roughly
+# the size of the live heap, and MaxRAMPercentage below allows 75% of the machine's RAM.
+ENV JAVA_TOOL_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/dumps"
+
 # Then add the user, create the /app folder and give permissions to our user.
-RUN adduser -D -H $APPLICATION_USER && mkdir /app && chown -R $APPLICATION_USER /app
+RUN adduser -D -H $APPLICATION_USER && mkdir -p /app/dumps && chown -R $APPLICATION_USER /app
 
 # Mark this container to use the specified $APPLICATION_USER
 USER $APPLICATION_USER
