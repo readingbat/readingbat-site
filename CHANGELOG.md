@@ -16,6 +16,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   container is pid 1 and they would otherwise overwrite each other's `java_pid1.hprof`. A dump is the
   only record of what was holding memory at the moment of an OOM. It is also a copy of live memory,
   so it carries secrets and user data — treat the file as a secret
+- `make release-check`, which pushes nothing and fails unless the checkout is fit to release
+  `VERSION`. It needs a final (non-pre-release) version, a clean tree on `master` matching
+  `origin/master`, no `SNAPSHOT` versions in `libs.versions.toml` and no active `mavenLocal()`, a
+  `CHANGELOG.md` and a `RELEASE_NOTES.md` section for the version, every image pin in
+  `docker-compose.yml` and `machines/content/run.sh` at the version, a `VERSION` tag (if any) on
+  HEAD, a passing CI `build` check for HEAD, and no `VERSION` image already on Docker Hub. A
+  network check that gets no clear answer fails rather than passing
+- `make docker-verify`, which checks that the published `VERSION` image carries every platform
+  and that `:latest` has the same digest
+- `make versions-all`, the dependency-updates plugin's own plain report, which also lists every
+  dependency already up to date
+
+### Changed
+- `make versions` now lists only the dependencies with newer versions (and any that could not be
+  checked, and a Gradle update), one line each. `build.gradle.kts` gives `dependencyUpdates` its
+  own output formatter; the full report, which opens with every up-to-date dependency, moved to
+  `make versions-all`
+- Bumped Kotlin to 2.4.21, the BuildConfig plugin to 6.1.2, and the Gradle versions plugin to 0.66.0
+- Upgraded the Gradle wrapper to 9.8.1
+- `make release` now runs `release-check`, a clean run of the full test suite, and a `[y/N]`
+  confirmation before it pushes, then runs `docker-verify`. It used to build and push with no
+  tests and no checks, so it would silently overwrite an image that had already been published.
+  `docker-push` refuses pre-release versions, since it also tags `:latest`
 
 ## [3.4.0] — 2026-09-21
 

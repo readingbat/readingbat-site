@@ -55,7 +55,8 @@ Linux and in Docker. `*.bat` is the sole CRLF exception; keep the two files in s
 ## Versioning and releases
 
 - Bump version → update `CHANGELOG.md` `[Unreleased]` → add a `RELEASE_NOTES.md` entry
-- `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image
+- `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image. `RELEASE_VERSION_FILES` in the `Makefile` is the list `make release-check` enforces — add any new pinning file there
+- `make release-check` also refuses `SNAPSHOT` versions in `libs.versions.toml` and an active `mavenLocal()` in `settings.gradle.kts`, so local testing against an unpublished `readingbat-core` has to be reverted before a release
 - `README.md`'s "Project conventions" section summarizes what *this* file covers — if you add or drop a section here, check that summary still matches
 - Not every `CHANGELOG.md` version has a compare link. The pre-3.1.1 history and a few 3.1.x
   entries were never tagged, so the link list deliberately skips them and compares against the
