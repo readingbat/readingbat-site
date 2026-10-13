@@ -4,7 +4,7 @@
 [![Kotlin](https://img.shields.io/badge/language-Kotlin-7F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![JDK](https://img.shields.io/badge/JDK-25-007396.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
 [![Ktor](https://img.shields.io/badge/Ktor-3.6-087CFA.svg?logo=ktor&logoColor=white)](https://ktor.io/)
-[![Gradle](https://img.shields.io/badge/Gradle-9.7-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
+[![Gradle](https://img.shields.io/badge/Gradle-9.8-02303A.svg?logo=gradle&logoColor=white)](https://gradle.org/)
 [![License](https://img.shields.io/github/license/readingbat/readingbat-site.svg)](LICENSE.txt)
 [![GitHub release](https://img.shields.io/github/v/release/readingbat/readingbat-site.svg?logo=github)](https://github.com/readingbat/readingbat-site/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/pambrose/readingbat.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/pambrose/readingbat)
@@ -89,7 +89,8 @@ make lint                    # lintKotlin + detekt
 make format                  # apply formatting
 make uberjar                 # build the fat jar
 make run-uber                # run the fat jar
-make release                 # build + push multi-arch Docker image
+make release-check           # check the checkout is fit to release (pushes nothing)
+make release                 # gate + test, then push and verify the multi-arch image
 make deploy                  # deploy via secrets/deploy-app.sh
 make upgrade-wrapper         # bump the Gradle wrapper to the catalog-pinned version
 ```
@@ -132,10 +133,12 @@ default, since `env_file` wins over `ENV`.
    `machines/content/run.sh` to the new version.
 3. Move `[Unreleased]` entries in [`CHANGELOG.md`](CHANGELOG.md) under the new
    version and add a highlights entry to [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
-4. `make release` to build and push the Docker image.
-5. Follow the runbook in [`docs/release_notes.md`](docs/release_notes.md) to
+4. Merge to `master` and let CI pass. `make release-check` lists anything still
+   missing from steps 1–3.
+5. `make release` to test, then push and verify the Docker image (it asks first).
+6. Follow the runbook in [`docs/release_notes.md`](docs/release_notes.md) to
    roll the deployment on Digital Ocean.
-6. Cut a GitHub release: tag `X.Y.Z` (no `v` prefix), title `vX.Y.Z`.
+7. Cut a GitHub release: tag `X.Y.Z` (no `v` prefix), title `vX.Y.Z`.
 
 ## Project conventions
 

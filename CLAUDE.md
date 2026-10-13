@@ -55,7 +55,8 @@ Linux and in Docker. `*.bat` is the sole CRLF exception; keep the two files in s
 ## Versioning and releases
 
 - Bump version → update `CHANGELOG.md` `[Unreleased]` → add a `RELEASE_NOTES.md` entry
-- `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image
+- `docker-compose.yml` and `machines/content/run.sh` pin specific image tags; update those alongside any version bump that ships a new image. `RELEASE_VERSION_FILES` in the `Makefile` is the list `make release-check` enforces — add any new pinning file there
+- `make release-check` also refuses `SNAPSHOT` versions in `libs.versions.toml` and an active `mavenLocal()` in `settings.gradle.kts`, so local testing against an unpublished `readingbat-core` has to be reverted before a release
 - `README.md`'s "Project conventions" section summarizes what *this* file covers — if you add or drop a section here, check that summary still matches
 - Not every `CHANGELOG.md` version has a compare link. The pre-3.1.1 history and a few 3.1.x
   entries were never tagged, so the link list deliberately skips them and compares against the
@@ -72,6 +73,7 @@ Deploy target is Digital Ocean Apps (Docker only — no Heroku); the runbook is 
 
 - `docs/release_notes.md` is the deployment runbook, **not** per-version notes (those live in `RELEASE_NOTES.md`)
 - `readingbat-core` is the framework — site changes that look like framework work probably belong upstream
+- `kotlin-scripting` in `libs.versions.toml` deliberately lags `kotlin`. `configureScripting` forces the runtime scripting jars (`kotlin-scripting-*`, `kotlin-compiler-embeddable` and friends) to it because Kotlin 2.4.20+ keeps every JSR-223 script state's compiler environment reachable, and `readingbat-core` starts a new state per Kotlin script. Don't bump it alongside `kotlin`; raise it only once a Kotlin release fixes that, and check the heap stays flat while the server loads Kotlin challenges
 - The `gradle-wrapper` entry in `libs.versions.toml` is currently informational only; `gradle/wrapper/gradle-wrapper.properties` is what the wrapper actually uses. Keep them in sync when bumping (`make upgrade-wrapper` does this)
 - `shadowJar` relies on `DuplicatesStrategy.EXCLUDE` to resolve duplicate license/metadata collisions; it no longer wildcard-excludes `LICENSE*`, so third-party attribution files are preserved in `server.jar`. The jar-signature excludes are a single vararg `exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")` — add new patterns to that call rather than stacking separate `exclude` lines
 - `BuildConfig` is generated under `com.readingbat.site`; the `main` function is in the default package (legacy; intentional)

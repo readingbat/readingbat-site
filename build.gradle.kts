@@ -53,6 +53,7 @@ application {
 }
 
 configureKotlin()
+configureScripting()
 configureDetekt()
 configureKotlinter()
 configureKtor()
@@ -72,6 +73,28 @@ fun Project.configureKotlin() {
   tasks.named<KotlinCompile>("compileKotlin") {
     compilerOptions {
       freeCompilerArgs.add("-Xreturn-value-checker=check")
+    }
+  }
+}
+
+fun Project.configureScripting() {
+  // Kotlin 2.4.20 and later leave each JSR-223 script state's compiler environment reachable
+  // (about 27 MB apiece) once the engine moves to a new one. readingbat-core resets its pooled
+  // engines after every Kotlin script it evaluates, content sources and challenges alike, so the
+  // server's heap grows with every Kotlin challenge it loads. readingbat-core brings in the
+  // scripting jars at its own Kotlin version; this holds them at one that releases the state.
+  // Only the runtime classpaths are pinned: the compiler that builds this project is untouched.
+  val scriptingVersion = libs.versions.kotlin.scripting.get()
+  val compilerModules = setOf("kotlin-compiler-embeddable", "kotlin-daemon-embeddable", "kotlin-script-runtime")
+
+  configurations.matching { it.name in setOf("runtimeClasspath", "testRuntimeClasspath") }.configureEach {
+    resolutionStrategy.eachDependency {
+      if (requested.group == "org.jetbrains.kotlin" &&
+        (requested.name.startsWith("kotlin-scripting-") || requested.name in compilerModules)
+      ) {
+        useVersion(scriptingVersion)
+        because("Kotlin 2.4.20+ scripting retains every script state's compiler environment")
+      }
     }
   }
 }
@@ -137,6 +160,24 @@ fun Project.configureVersions() {
     // alpha), newer pre-releases are still surfaced as available updates.
     rejectVersionIf {
       isNonStable(candidate.version) && !isNonStable(currentVersion)
+    }
+
+    // Prints only what is behind, and what could not be checked. The plugin's own report, which
+    // `make versions-all` asks for with --output-formatter=plain, first lists every dependency
+    // already up to date.
+    outputFormatter {
+      val behind = outdated.dependencies.sortedBy { "${it.group}:${it.name}" }
+      if (behind.isEmpty()) println("All dependencies are up to date")
+      behind.forEach { d ->
+        val latest = with(d.available) { release ?: milestone ?: integration }
+        println(" - ${d.group}:${d.name} ${d.version} -> $latest")
+      }
+      unresolved.dependencies.sortedBy { "${it.group}:${it.name}" }.forEach {
+        println(" ? ${it.group}:${it.name}:${it.version} could not be checked")
+      }
+      if (gradle.current.isUpdateAvailable) {
+        println(" - Gradle ${gradle.running.version} -> ${gradle.current.version}")
+      }
     }
   }
 }

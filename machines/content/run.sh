@@ -5,4 +5,4 @@
 # so the JVM could not write there. A named volume inherits /app/dumps's ownership from the image.
 # Retrieve a dump with:
 #   docker run --rm -v readingbat-dumps:/dumps -v "$(pwd)":/out alpine cp /dumps/java_pid1.hprof /out/
-docker run --rm -d --env-file=docker_env_vars -v readingbat-dumps:/app/dumps -p 8080:8080 pambrose/readingbat:3.4.0
+docker run --rm -d --env-file=docker_env_vars -v readingbat-dumps:/app/dumps -p 8080:8080 pambrose/readingbat:3.5.0

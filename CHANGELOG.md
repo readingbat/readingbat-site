@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.0] — 2026-10-12
+
 ### Added
 - Heap dumps on `OutOfMemoryError`. The image now sets
   `JAVA_TOOL_OPTIONS=-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/dumps`, and both
@@ -16,6 +18,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   container is pid 1 and they would otherwise overwrite each other's `java_pid1.hprof`. A dump is the
   only record of what was holding memory at the moment of an OOM. It is also a copy of live memory,
   so it carries secrets and user data — treat the file as a secret
+- `make release-check`, which pushes nothing and fails unless the checkout is fit to release
+  `VERSION`. It needs a final (non-pre-release) version, a clean tree on `master` matching
+  `origin/master`, no `SNAPSHOT` versions in `libs.versions.toml` and no active `mavenLocal()`, a
+  `CHANGELOG.md` and a `RELEASE_NOTES.md` section for the version, every image pin in
+  `docker-compose.yml` and `machines/content/run.sh` at the version, a `VERSION` tag (if any) on
+  HEAD, a passing CI `build` check for HEAD, and no `VERSION` image already on Docker Hub. A
+  network check that gets no clear answer fails rather than passing
+- `make docker-verify`, which checks that the published `VERSION` image carries every platform
+  and that `:latest` has the same digest
+- `make versions-all`, the dependency-updates plugin's own plain report, which also lists every
+  dependency already up to date
+
+### Changed
+- Bumped `readingbat-core` to 3.5.0
+- Bumped Kotlin to 2.4.21, the BuildConfig plugin to 6.1.2, and the Gradle versions plugin to 0.66.0
+- Held the runtime Kotlin scripting jars (`kotlin-scripting-*`, `kotlin-compiler-embeddable`) at
+  2.4.10 through a new `kotlin-scripting` catalog version, while the project itself builds with
+  Kotlin 2.4.21. From Kotlin 2.4.20 on, every JSR-223 script state keeps its compiler environment
+  (about 27 MB) reachable, and readingbat-core 3.5.0, which brings in the 2.4.21 scripting jars,
+  starts a new state for every Kotlin script it evaluates, so the heap grows with each Kotlin
+  challenge the server loads
+- Upgraded the Gradle wrapper to 9.8.1
+- Bumped the pinned image tags in `docker-compose.yml` and `machines/content/run.sh` to 3.5.0
+- `make versions` now lists only the dependencies with newer versions (and any that could not be
+  checked, and a Gradle update), one line each. `build.gradle.kts` gives `dependencyUpdates` its
+  own output formatter; the full report, which opens with every up-to-date dependency, moved to
+  `make versions-all`
+- `make release` now runs `release-check`, a clean run of the full test suite, and a `[y/N]`
+  confirmation before it pushes, then runs `docker-verify`. It used to build and push with no
+  tests and no checks, so it would silently overwrite an image that had already been published.
+  `docker-push` refuses pre-release versions, since it also tags `:latest`
 
 ## [3.4.0] — 2026-09-21
 
@@ -241,7 +274,8 @@ entries) predate the current tagging convention and were never tagged in git, so
 diff to link to. The entries below skip those versions and compare against the nearest
 tag that exists.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.4.0...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.5.0...HEAD
+[3.5.0]: https://github.com/readingbat/readingbat-site/compare/3.4.0...3.5.0
 [3.4.0]: https://github.com/readingbat/readingbat-site/compare/3.3.3...3.4.0
 [3.3.3]: https://github.com/readingbat/readingbat-site/compare/3.3.2...3.3.3
 [3.3.2]: https://github.com/readingbat/readingbat-site/compare/3.3.1...3.3.2
