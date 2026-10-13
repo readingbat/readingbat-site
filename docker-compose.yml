@@ -1,6 +1,6 @@
 services:
   readingbat0:
-    image: "pambrose/readingbat:3.4.0"
+    image: "pambrose/readingbat:3.5.0"
     restart: "always"
     env_file: docker_env_vars
     ports:
@@ -10,7 +10,7 @@ services:
     volumes:
       - readingbat0-dumps:/app/dumps
   readingbat1:
-    image: "pambrose/readingbat:3.4.0"
+    image: "pambrose/readingbat:3.5.0"
     restart: "always"
     env_file: docker_env_vars
     ports:
@@ -20,7 +20,7 @@ services:
     volumes:
       - readingbat1-dumps:/app/dumps
   readingbat2:
-    image: "pambrose/readingbat:3.4.0"
+    image: "pambrose/readingbat:3.5.0"
     restart: "always"
     env_file: docker_env_vars
     ports:

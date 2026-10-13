@@ -6,6 +6,29 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.5.0 — 2026-10-12
+
+A guarded release flow, heap dumps on OOM, and a dependency refresh.
+
+- Bumped `readingbat-core` to 3.5.0.
+- Held the Kotlin scripting jars that challenges run on at 2.4.10, while the
+  project itself builds with Kotlin 2.4.21. From Kotlin 2.4.20 on, every
+  JSR-223 script state keeps its compiler environment (about 27 MB) reachable,
+  and `readingbat-core` 3.5.0 starts a new state for every Kotlin script it
+  evaluates, so the newer jars would grow the heap with each Kotlin challenge.
+- Bumped Kotlin to 2.4.21, the BuildConfig plugin to 6.1.2, and the Gradle
+  versions plugin to 0.66.0; upgraded the Gradle wrapper to 9.8.1.
+- The image now writes a heap dump to `/app/dumps` on `OutOfMemoryError`, and
+  `docker-compose.yml` and `machines/content/run.sh` mount a named volume there
+  so the dump outlives the container. A dump is a copy of live memory, secrets
+  and user data included, so treat the file as a secret.
+- `make release` now gates the push: it runs the new `make release-check`
+  (which pushes nothing), the full test suite from a clean build, and a `[y/N]`
+  confirmation, then checks the published image with the new
+  `make docker-verify`. It no longer overwrites an image already on Docker Hub.
+- `make versions` lists only what is out of date; `make versions-all` prints
+  the plugin's full report.
+
 ## v3.4.0 — 2026-09-21
 
 Dependency refresh and line-ending hygiene.
