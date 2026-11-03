@@ -95,6 +95,7 @@ make docker-scan             # docker-build, then list the image's CVEs with Doc
 make release-check           # check the checkout is fit to release (pushes nothing)
 make release                 # gate + test, then push and verify the multi-arch image
 make deploy                  # deploy :latest to Digital Ocean, pulling it again (doctl; checks it is VERSION)
+make logs                    # follow the Digital Ocean app's runtime log (doctl)
 make upgrade-wrapper         # bump the Gradle wrapper to the catalog-pinned version
 ```
 
