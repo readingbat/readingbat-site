@@ -1,6 +1,7 @@
 .PHONY: default help clean clean-all build tests uberjar run-uber cc run versions versions-all lint detekt \
-		detekt-baseline format docker-push docker-verify release release-check _confirm-release deploy do-log \
-		upgrade-wrapper _require-version _require-final-version _require-gradle-version
+		detekt-baseline format docker-build docker-scan docker-push docker-verify release release-check _check-checkout \
+		_check-core _confirm-release deploy do-log upgrade-wrapper _require-version _require-final-version \
+		_require-gradle-version
 
 VERSION := $(shell sed -n 's/^version=\(.*\)/\1/p' gradle.properties)
 GRADLE_VERSION := $(shell sed -n 's/^gradle-wrapper = "\(.*\)"/\1/p' gradle/libs.versions.toml)
@@ -17,8 +18,19 @@ REQUIRED_CHECKS := build
 # The files that pin $(IMAGE_NAME) to a tag. release-check fails unless every pin in each one is VERSION;
 # keep this list in step with the "Versioning and releases" section of CLAUDE.md.
 RELEASE_VERSION_FILES := docker-compose.yml machines/content/run.sh
+# The paths whose files go into the image: the Dockerfile copies Content.kt, src/main/resources, and jmx/, and server.jar
+# is built from src/main. `git status --porcelain` hides gitignored files, so _check-checkout looks for those here.
+PACKAGED_PATHS := src/main jmx
+# The image docker-build loads into the local Docker for docker-scan. It isn't an $(IMAGE_NAME) tag, so a stray
+# `docker push` can't send it to Docker Hub.
+LOCAL_IMAGE := readingbat:local
 # The commit `make release` started from; _confirm-release refuses to push if HEAD has moved since.
 HEAD_SHA := $(shell git rev-parse HEAD 2>/dev/null)
+# The catalog's readingbat-core version, which _check-core requires to be on Maven Central or a readingbat-core tag.
+CORE_VERSION := $(shell sed -n 's/^readingbat = "\(.*\)"/\1/p' gradle/libs.versions.toml)
+CORE_REPO_URL := https://github.com/readingbat/readingbat-core
+MAVEN_CENTRAL_URL := https://repo1.maven.org/maven2/com/readingbat
+LOCAL_MAVEN_REPO ?= $(HOME)/.m2/repository
 
 default: help
 
@@ -29,10 +41,11 @@ help:  ## Show this help (list of targets)
 clean: ## Remove Gradle build outputs
 	./gradlew clean
 
-clean-all: clean ## Remove Gradle build outputs and caches
-	rm -rf build .gradle
+# Doesn't run Gradle, so it still works when the build script is broken.
+clean-all: ## Remove Gradle build outputs and caches
+	rm -rf build .gradle .kotlin
 
-build: clean ## Clean and build (skipping tests)
+build: ## Build (skipping tests)
 	./gradlew build -x test
 
 lint: ## Run Kotlinter and detekt
@@ -47,8 +60,10 @@ detekt: ## Run detekt static analysis
 detekt-baseline: ## Generate detekt baseline file
 	./gradlew detektBaseline
 
+# `test --rerun` runs the tests even when Gradle has an up-to-date or cached result for them. Everything else, such as
+# compiling and lint, may come from the build cache.
 tests: ## Run the full test suite
-	./gradlew --rerun-tasks check
+	./gradlew check test --rerun
 
 uberjar: ## Build the fat/uber JAR
 	./gradlew buildFatJar
@@ -56,8 +71,8 @@ uberjar: ## Build the fat/uber JAR
 run-uber: uberjar ## Run the built uber JAR
 	java -jar build/libs/server.jar
 
-cc: ## Continuous compile (classes, skip tests)
-	./gradlew classes --continuous -x test
+cc: ## Continuous compile (classes)
+	./gradlew classes --continuous
 
 run: ## Run the app via Gradle
 	./gradlew run
@@ -72,7 +87,18 @@ versions: ## List the dependencies with newer versions, and any that could not b
 versions-all: ## The plugin's full dependency report, up-to-date dependencies included
 	./gradlew dependencyUpdates --no-configuration-cache --no-parallel --output-formatter=plain
 
-docker-push: _require-final-version uberjar ## Build and push multi-arch Docker image
+# --load puts the image into the local Docker; a docker-container builder, like the one docker-push selects, otherwise
+# keeps the result to itself. It builds for this machine's platform only.
+docker-build: uberjar ## Build the image for this machine's platform into the local Docker, as readingbat:local
+	docker buildx build --load -t $(LOCAL_IMAGE) .
+
+# Scans the image, not just its base: the libraries inside server.jar are only visible here.
+docker-scan: docker-build ## Build the image locally, then list its CVEs with Docker Scout
+	docker scout cves $(LOCAL_IMAGE)
+
+# Runs release-check's checks on what goes into the image, but not its Docker Hub check, so it can finish a release
+# that stopped partway through the push.
+docker-push: _require-final-version _check-checkout _check-core uberjar ## Build and push the multi-arch image (VERSION and latest)
 	# prepare multiarch
 	docker buildx use readingbat-builder 2>/dev/null || docker buildx create --use --name=readingbat-builder
 	docker buildx build --platform $(PLATFORMS) --push -t $(IMAGE_NAME):latest -t $(IMAGE_NAME):$(VERSION) .
@@ -89,18 +115,9 @@ docker-verify: _require-version ## Check the published VERSION image has every p
 	echo "$(IMAGE_NAME):$(VERSION) (and :latest) published for $(PLATFORMS)"
 
 # Pushes nothing: it fails unless this checkout is fit to release VERSION. The local checks run first, then the
-# network ones (origin, GitHub's CI checks for HEAD, Docker Hub). A network check that gets no clear answer fails.
-release-check: _require-final-version ## Fail unless this checkout is fit to release VERSION
-	@test -z "$$(git status --porcelain)" \
-		|| { echo "ERROR: the working tree is dirty; commit or stash first" >&2; exit 1; }
-	@branch=$$(git rev-parse --abbrev-ref HEAD); [ "$$branch" = "$(RELEASE_BRANCH)" ] \
-		|| { echo "ERROR: releases are cut from $(RELEASE_BRANCH), not $$branch" >&2; exit 1; }
-	@snapshots=$$(grep -n 'SNAPSHOT' gradle/libs.versions.toml | sed 's/^/  /'); [ -z "$$snapshots" ] \
-		|| { printf 'ERROR: gradle/libs.versions.toml pins SNAPSHOT versions, so the image is not reproducible:\n%s\n' \
-			"$$snapshots" >&2; exit 1; }
-	@! grep -qE '^[[:space:]]*mavenLocal' settings.gradle.kts \
-		|| { echo "ERROR: settings.gradle.kts resolves from mavenLocal(); disable it so the image uses only" \
-			"published artifacts" >&2; exit 1; }
+# network ones (origin, GitHub's CI checks for HEAD, Docker Hub, readingbat-core's source). A network check that gets
+# no clear answer fails.
+release-check: _require-final-version _check-checkout ## Fail unless this checkout is fit to release VERSION
 	@grep -q '^## \[$(VERSION)\]' CHANGELOG.md \
 		|| { echo "ERROR: CHANGELOG.md has no [$(VERSION)] section" >&2; exit 1; }
 	@grep -qE '^## v$(VERSION)( |$$)' RELEASE_NOTES.md \
@@ -136,7 +153,46 @@ release-check: _require-final-version ## Fail unless this checkout is fit to rel
 		200) echo "ERROR: $(IMAGE_NAME):$(VERSION) is already on Docker Hub; bump the version" >&2; exit 1;; \
 		*) echo "ERROR: could not tell whether $(IMAGE_NAME):$(VERSION) is on Docker Hub (HTTP $$code)" >&2; exit 1;; \
 	esac
+	@$(MAKE) --no-print-directory _check-core
 	@echo "Ready to release $(VERSION) from $$(git rev-parse --short HEAD)"
+
+# What goes into the image must be committed, on RELEASE_BRANCH, and built from released versions. Offline; shared by
+# release-check and docker-push.
+_check-checkout:
+	@test -z "$$(git status --porcelain)" \
+		|| { echo "ERROR: the working tree is dirty; commit or stash first" >&2; exit 1; }
+	@ignored=$$(git status --porcelain --ignored -- $(PACKAGED_PATHS) | sed -n 's/^!! /  /p'); [ -z "$$ignored" ] \
+		|| { printf 'ERROR: these gitignored files would go into the image; delete or move them:\n%s\n' \
+			"$$ignored" >&2; exit 1; }
+	@branch=$$(git rev-parse --abbrev-ref HEAD); [ "$$branch" = "$(RELEASE_BRANCH)" ] \
+		|| { echo "ERROR: releases are cut from $(RELEASE_BRANCH), not $$branch" >&2; exit 1; }
+	@snapshots=$$(grep -n 'SNAPSHOT' gradle/libs.versions.toml | sed 's/^/  /'); [ -z "$$snapshots" ] \
+		|| { printf 'ERROR: gradle/libs.versions.toml pins SNAPSHOT versions, so the image is not reproducible:\n%s\n' \
+			"$$snapshots" >&2; exit 1; }
+
+# readingbat-core comes from Maven Central when Central has it. Otherwise settings.gradle.kts takes it from the local
+# Maven repo, and it must be a readingbat-core tag, which is what CI builds it from. Shared by release-check and
+# docker-push.
+_check-core:
+	@[ -n "$(CORE_VERSION)" ] \
+		|| { echo "ERROR: could not read the readingbat version from gradle/libs.versions.toml" >&2; exit 1; }
+	@code=$$(curl -s -o /dev/null -w '%{http_code}' \
+		"$(MAVEN_CENTRAL_URL)/readingbat-core/$(CORE_VERSION)/readingbat-core-$(CORE_VERSION).pom"); \
+	case "$$code" in \
+		200) ;; \
+		404) git ls-remote --exit-code --tags $(CORE_REPO_URL) "refs/tags/$(CORE_VERSION)" >/dev/null \
+				|| { echo "ERROR: readingbat-core $(CORE_VERSION) is not on Maven Central, and is not a tag in" \
+					"$(CORE_REPO_URL) that CI could build it from" >&2; exit 1; }; \
+			for a in readingbat-core readingbat-kotest; do \
+				[ -f "$(LOCAL_MAVEN_REPO)/com/readingbat/$$a/$(CORE_VERSION)/$$a-$(CORE_VERSION).jar" ] \
+					|| { echo "ERROR: $$a $(CORE_VERSION) is not on Maven Central or in $(LOCAL_MAVEN_REPO);" \
+						"run \`make publish-local\` in readingbat-core with tag $(CORE_VERSION) checked out" >&2; exit 1; }; \
+			done; \
+			echo "NOTE: readingbat-core $(CORE_VERSION) is not on Maven Central, so the image gets the copy in" \
+				"$(LOCAL_MAVEN_REPO). It should be built from tag $(CORE_VERSION), as CI's was";; \
+		*) echo "ERROR: could not tell whether readingbat-core $(CORE_VERSION) is on Maven Central (HTTP $$code)" >&2; \
+			exit 1;; \
+	esac
 
 # The tests take a while, so the checkout release-check passed is checked again before anything is pushed.
 _confirm-release:
@@ -162,13 +218,13 @@ release: ## Gate, test, then push and verify the VERSION image on Docker Hub (as
 	@prev=$$(git describe --tags --abbrev=0 --exclude=$(VERSION) 2>/dev/null); \
 	echo; \
 	echo "Pushed $(IMAGE_NAME):$(VERSION) and :latest. Next:"; \
-	echo "  1. Roll the deployment on Digital Ocean (docs/release_notes.md)"; \
+	echo "  1. Roll the deployment on Digital Ocean: make deploy, or Actions > Deploy on the app (docs/release_notes.md)"; \
 	echo "  2. Create the GitHub release if it doesn't exist yet: tag $(VERSION), title v$(VERSION), and a summary"; \
 	echo "     ending with **Full Changelog**: $(REPO_URL)/compare/$$prev...$(VERSION)"; \
 	echo "     gh release create $(VERSION) --target $(HEAD_SHA) --title v$(VERSION) --notes-file <notes>"
 	@command -v say >/dev/null && say "finished app release" || true
 
-deploy: ## Deploy the app via secrets/deploy-app.sh
+deploy: ## Start a Digital Ocean deployment of the app (secrets/deploy-app.sh), as the console's Deploy does
 	./secrets/deploy-app.sh
 	@command -v say >/dev/null && say "finished app deployment" || true
 

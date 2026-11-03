@@ -1,0 +1,27 @@
+version: 2
+updates:
+  # The Dockerfile pins its base image by digest; this proposes the bumps that keep it patched.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Let a digest age a week before adopting it, as with the actions below. For a CVE fix that can't
+    # wait, refresh the digest by hand (CLAUDE.md, "Docker / deploy").
+    cooldown:
+      default-days: 7
+
+  # The workflows pin every action to a commit SHA, which never moves on its own. This bumps the SHA
+  # together with its trailing `# vX.Y.Z` comment.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Let a release age a week before adopting it, so a compromised or yanked release is likely caught
+    # first. Security updates ignore the cooldown.
+    cooldown:
+      default-days: 7
+    # One PR per week for all actions, rather than one per action.
+    groups:
+      github-actions:
+        patterns:
+          - "*"

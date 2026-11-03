@@ -7,6 +7,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.1] — 2026-11-02
+
+### Added
+- `.github/dependabot.yml`, which proposes weekly bumps of the Dockerfile's base-image digest and of
+  the CI workflow's actions, holding each new release back until it is a week old
+- `make docker-build`, which builds the image for this machine into the local Docker as
+  `readingbat:local`, and `make docker-scan`, which then lists its CVEs with Docker Scout,
+  `server.jar`'s libraries included
+
+### Changed
+- The image exits on an `OutOfMemoryError` (`-XX:+ExitOnOutOfMemoryError` in `JAVA_TOOL_OPTIONS`),
+  after the heap dump is written. It used to keep running a JVM that may have lost a thread to the
+  OOM, and a restart policy only replaces a container that exits. `machines/content/run.sh` now runs
+  the container with `--restart=unless-stopped` in place of `--rm`, which Docker refuses alongside a
+  restart policy, so an OOM there no longer leaves the server down
+- The dump-retrieval commands in `machines/content/run.sh` and the README move `java_pid1.hprof` off
+  the volume instead of copying it. Every container's JVM is pid 1, and the JVM will not overwrite an
+  existing dump, so a dump left on the volume meant the next OOM wrote none
+- The application files in the image (`server.jar`, `Content.kt`, the resources, and the JMX agent)
+  are owned by root, and the runtime user can write only to `/app/dumps`. They were owned by the
+  runtime user, so the server could have modified its own jar and the `Content.kt` it evaluates
+- Pinned the base image to its multi-arch digest, so a rebuild of the same version gets the same JDK
+- The image upgrades `libexpat` to Alpine's 2.10.0-r0 and removes `binutils`, clearing the base
+  image's seven high-severity CVEs (four in libexpat 2.9.0, three unfixed in binutils 2.45.1) per
+  Docker Scout. Neither was reachable from the server: only fontconfig uses libexpat, and binutils is
+  there for `jlink`. The libexpat upgrade can go once a base-image digest bump carries the fix
+- Bumped the vendored Prometheus JMX exporter agent from 1.5.0 to 1.7.0. Being a checked-in jar,
+  `make versions` does not report it; the Dockerfile and README now say where to check
+- The `HEALTHCHECK` probes `$PORT` when it is set, matching the port override `application.conf`
+  honors, instead of always probing 8080
+- `EXPOSE` drops ports 8091 and 8092, which nothing listens on, and the `ENTRYPOINT` drops `-server`,
+  a no-op on 64-bit JVMs
+- Bumped `readingbat-core` to 3.5.1. Request logging now records logged-in users only: a request
+  without a login writes nothing to `server_requests` or `browser_sessions`, so crawlers and bots
+  that keep the browser-session cookie no longer fill those tables, and a new anonymous visitor no
+  longer triggers an ipgeolocation.io lookup. The active-session counts on the admin pages and in
+  the Prometheus metrics count logged-in sessions only; existing rows are left alone. The release
+  also publishes a strict 2.4.10 pin on its Kotlin scripting runtime, which now holds this
+  project's scripting jars by itself (see Removed)
+- Bumped Ktor to 3.6.1, Kotest to 6.2.6, and the Gradle versions plugin to 0.67.0
+- Upgraded the Gradle wrapper to 9.8.2
+- Bumped the pinned image tags in `docker-compose.yml` and `machines/content/run.sh` to 3.5.1
+- The site can depend on a `readingbat-core` version that is never published to Maven Central.
+  `settings.gradle.kts` resolves `com.readingbat` from the local Maven repo after Central. The
+  version must be a readingbat-core tag: when Central lacks it, CI builds it from the tag into the
+  runner's local repo before building the site. `make release-check` no longer refuses
+  `mavenLocal()`. It refuses a core version that is neither on Central nor tagged, or that is
+  missing from `~/.m2`, and notes when the image will take core from `~/.m2`
+- `make docker-push` runs the release gate's checks on what goes into the image before it pushes:
+  a clean tree on `master`, no `SNAPSHOT` versions, and a `readingbat-core` that is on Maven
+  Central or tagged. It used to push, and replace `:latest`, from any checkout
+- The release checks also fail on gitignored files under `src/main` or `jmx/`. `git status` doesn't
+  list those, but the build and the Dockerfile would package them into the public image
+- `make clean-all` no longer runs Gradle, so it works when the build script is broken, and it also
+  removes `.kotlin/`. `make build` no longer cleans first. `make tests` reruns only the tests,
+  rather than every task. `make cc` drops a `-x test` that did nothing
+- The CI workflow pins its actions to commit SHAs and moves them to `actions/checkout` 7.0.1,
+  `actions/setup-java` 6.1.0, and `gradle/actions/setup-gradle` 6.4.1. It runs with a read-only
+  `GITHUB_TOKEN` and no longer leaves the token in the checkout's git config
+
+### Removed
+- This project's own Kotlin scripting hold (`configureScripting` and the `kotlin-scripting` catalog
+  entry). `readingbat-core` 3.5.1 publishes the same 2.4.10 pin, so the resolved jars are unchanged.
+  The rule's `useVersion` also overrode core's `strictly` pin, so once core moved it the site would
+  have stayed behind without a word
+- The `SITE_NAME` and `SITE_RELEASE_DATE` `BuildConfig` fields, which nothing read, and the
+  `ValueSource` behind the date. The date changed daily, so the first build each day recompiled and
+  missed the build cache
+- The unused `kotlin-logging` and `kotest-assertions-ktor` dependencies. `readingbat-core` still
+  brings in `kotlin-logging`
+- The hand-written `META-INF/services/javax.script.ScriptEngineFactory`. Each script engine's jar
+  registers itself, and the fat jar merges those registrations
+
 ## [3.5.0] — 2026-10-12
 
 ### Added
@@ -274,7 +347,8 @@ entries) predate the current tagging convention and were never tagged in git, so
 diff to link to. The entries below skip those versions and compare against the nearest
 tag that exists.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.5.0...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.5.1...HEAD
+[3.5.1]: https://github.com/readingbat/readingbat-site/compare/3.5.0...3.5.1
 [3.5.0]: https://github.com/readingbat/readingbat-site/compare/3.4.0...3.5.0
 [3.4.0]: https://github.com/readingbat/readingbat-site/compare/3.3.3...3.4.0
 [3.3.3]: https://github.com/readingbat/readingbat-site/compare/3.3.2...3.3.3
