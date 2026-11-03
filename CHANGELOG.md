@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.0] — 2026-11-02
+
+**Upgrade step required.** `DBMS_URL` moves to the PostgreSQL driver's form, keeping the host, port,
+and database: `jdbc:pgsql://host:port/readingbat?ssl.mode=Require` becomes
+`jdbc:postgresql://host:port/readingbat?sslmode=require`. Change it in the Digital Ocean app and in
+`secrets/docker_env_vars` (for `run.sh` and `docker-compose.yml`) after pushing the image. 3.6.0 stops at
+startup on the old form and 3.5.x on the new one (`docs/release_notes.md`). `DBMS_DRIVER_CLASSNAME`
+must stay unset, as it is in both, or be `org.postgresql.Driver`.
+
+### Changed
+- Bumped `readingbat-core` to 3.6.0, which connects to PostgreSQL with the PostgreSQL JDBC driver
+  (`org.postgresql:postgresql` 42.7.14) in place of pgjdbc-ng, and rejects pgjdbc-ng settings at
+  startup with a message naming the replacement. Its strict 2.4.10 pin on the Kotlin scripting
+  runtime is unchanged
+- The commented-out local `dbms` block in `application.conf` uses the `jdbc:postgresql:` form
+- Bumped the pinned image tags in `docker-compose.yml` and `machines/content/run.sh` to 3.6.0
+- The deploy runbook (`docs/release_notes.md`) covers a release that needs a setting changed along
+  with the image: push first, then save the setting, which starts the deployment. A failed
+  deployment rolls back, but the saved setting stays, so every later deployment fails too
+
+### Removed
+- `com.impossibl.pgjdbc-ng:pgjdbc-ng-all` 0.8.9, which `readingbat-core` no longer brings in
+
+### Security
+- The image no longer ships the Netty 4.1.63 that `pgjdbc-ng-all` 0.8.9, its final release, bundles
+  under `com.impossibl.shadow.io.netty`. The server's TLS connection to the database ran through it.
+  Docker Scout's count for the built image drops from 19 CVEs (one critical, CVE-2026-75595, and
+  seven high) to 4, none critical or high: three in Alpine's coreutils with no fix released, and an
+  unrated one in musl. Its `pom.properties` also won the duplicate in `server.jar`, so scanners
+  reported that Netty and missed the 4.2.x the server uses for HTTP; Scout now reports 4.2.19
+
 ## [3.5.1] — 2026-11-02
 
 ### Added
@@ -347,7 +378,8 @@ entries) predate the current tagging convention and were never tagged in git, so
 diff to link to. The entries below skip those versions and compare against the nearest
 tag that exists.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.5.1...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.6.0...HEAD
+[3.6.0]: https://github.com/readingbat/readingbat-site/compare/3.5.1...3.6.0
 [3.5.1]: https://github.com/readingbat/readingbat-site/compare/3.5.0...3.5.1
 [3.5.0]: https://github.com/readingbat/readingbat-site/compare/3.4.0...3.5.0
 [3.4.0]: https://github.com/readingbat/readingbat-site/compare/3.3.3...3.4.0

@@ -78,7 +78,8 @@ Deploy target is Digital Ocean Apps (Docker only — no Heroku); the runbook is 
 `docs/release_notes.md`.
 
 - The Dockerfile's `FROM` is pinned by digest; Dependabot (`.github/dependabot.yml`) proposes the bumps. Refresh it by hand (`docker buildx imagetools inspect eclipse-temurin:25-jdk-alpine`, the index `Digest:`) if those stall. On each bump, rerun `docker scout cves` on the base image: once it ships libexpat ≥ 2.10.0 the Dockerfile's `apk upgrade libexpat` is a no-op and can go
-- Scan the *built* image (`make docker-scan`), not just the base: `server.jar` hides library CVEs a base-image scan never sees. `pgjdbc-ng-all` (from readingbat-core) shades Netty 4.1.63, and its `pom.properties` wins the `shadowJar` duplicate, so scanners report that Netty and miss the 4.2.x the app really uses
+- Scan the *built* image (`make docker-scan`), not just the base: `server.jar` hides library CVEs a base-image scan never sees, shaded copies included. Until 3.6.0, `pgjdbc-ng-all` (from readingbat-core) shaded a Netty 4.1.63 with a critical CVE, and its `pom.properties` won the `shadowJar` duplicate, so scanners reported that Netty and missed the 4.2.x the app really uses
+- `DBMS_URL` must match the driver the image's readingbat-core uses: `jdbc:postgresql://…?sslmode=require` from 3.6.0 on, `jdbc:pgsql://…?ssl.mode=Require` before it. Each refuses the other's form at startup, so a change of form ships with the image (runbook in `docs/release_notes.md`)
 - The JMX exporter agent is a jar vendored in `jmx/` and named in the `ENTRYPOINT`; `make versions` can't see it, so check its GitHub releases on each dependency refresh and update both
 - Application files in the image are root-owned on purpose; only `/app/dumps` is writable by the runtime user. Don't reintroduce `COPY --chown`
 - The image exits on OOM after dumping, so anything that runs it needs a restart policy (`run.sh` uses `--restart=unless-stopped`, which Docker refuses alongside `--rm`)
