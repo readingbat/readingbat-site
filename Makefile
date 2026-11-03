@@ -1,7 +1,7 @@
 .PHONY: default help clean clean-all build tests uberjar run-uber cc run versions versions-all lint detekt \
-		detekt-baseline format docker-build docker-scan docker-push docker-verify release release-check _check-checkout \
-		_check-core _confirm-release deploy do-log upgrade-wrapper _require-version _require-final-version \
-		_require-gradle-version
+		detekt-baseline format docker-build docker-scan docker-push docker-verify release release-check \
+		_check-checkout _check-core _confirm-release deploy logs upgrade-wrapper \
+		_require-version _require-final-version _require-gradle-version
 
 VERSION := $(shell sed -n 's/^version=\(.*\)/\1/p' gradle.properties)
 GRADLE_VERSION := $(shell sed -n 's/^gradle-wrapper = "\(.*\)"/\1/p' gradle/libs.versions.toml)
@@ -31,9 +31,13 @@ CORE_VERSION := $(shell sed -n 's/^readingbat = "\(.*\)"/\1/p' gradle/libs.versi
 CORE_REPO_URL := https://github.com/readingbat/readingbat-core
 MAVEN_CENTRAL_URL := https://repo1.maven.org/maven2/com/readingbat
 LOCAL_MAVEN_REPO ?= $(HOME)/.m2/repository
-# The Digital Ocean App Platform app that runs $(IMAGE_NAME):latest. deploy looks it up by name with doctl, which must be
-# installed and authenticated (doctl auth init).
+# The Digital Ocean App Platform app that runs $(IMAGE_NAME):latest. deploy and logs look it up by name with doctl, which
+# must be installed and authenticated (doctl auth init).
 DO_APP_NAME := readingbat
+# Shell for the start of a recipe line: sets $$id to the app's ID, or fails.
+DO_APP_ID = id=$$(doctl apps list --format ID,Spec.Name --no-header | awk '$$2 == "$(DO_APP_NAME)" { print $$1 }'); \
+	[ -n "$$id" ] || { echo "ERROR: found no Digital Ocean app named $(DO_APP_NAME); is doctl installed and" \
+		"authenticated (doctl auth init)?" >&2; exit 1; }
 
 default: help
 
@@ -232,15 +236,14 @@ release: ## Gate, test, then push and verify the VERSION image on Docker Hub (as
 # :latest again. docker-verify runs first, so what it pulls is this checkout's VERSION. --wait makes a failed
 # deployment fail the target; Digital Ocean has rolled back to the one that was running by then.
 deploy: docker-verify ## Deploy VERSION (:latest) to the Digital Ocean app, pulling the image again (doctl)
-	@id=$$(doctl apps list --format ID,Spec.Name --no-header | awk '$$2 == "$(DO_APP_NAME)" { print $$1 }'); \
-	[ -n "$$id" ] || { echo "ERROR: found no Digital Ocean app named $(DO_APP_NAME); is doctl installed and" \
-		"authenticated (doctl auth init)?" >&2; exit 1; }; \
+	@$(DO_APP_ID); \
 	echo "Deploying $(IMAGE_NAME):latest ($(VERSION)) to the $(DO_APP_NAME) app"; \
 	doctl apps create-deployment "$$id" --force-rebuild --wait
 	@command -v say >/dev/null && say "finished app deployment" || true
 
-do-log: ## Tail the deployed app log
-	./secrets/app-log.sh
+logs: ## Follow the Digital Ocean app's runtime log (doctl; Ctrl-C to stop)
+	@$(DO_APP_ID); \
+	doctl apps logs "$$id" --follow --type run
 
 upgrade-wrapper: _require-gradle-version ## Upgrade the Gradle wrapper to the catalog version
 	# Gradle's documented upgrade procedure: the first run rewrites

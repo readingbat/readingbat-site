@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `make logs`, which follows the Digital Ocean app's runtime log (`doctl apps logs --follow --type
+  run`), finding the app by `DO_APP_NAME` as `make deploy` does. It replaces `make do-log` and
+  `secrets/app-log.sh`
+
 ### Changed
 - `make deploy` runs `doctl apps create-deployment --force-rebuild --wait` on the Digital Ocean app
   named `DO_APP_NAME` (`readingbat`), in place of `secrets/deploy-app.sh`. It pulls `:latest` again,
