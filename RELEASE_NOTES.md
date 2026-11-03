@@ -20,9 +20,11 @@ jdbc:pgsql://<host>:<port>/readingbat?ssl.mode=Require        # before
 jdbc:postgresql://<host>:<port>/readingbat?sslmode=require    # after
 ```
 
-3.6.0 stops at startup on the old form, and 3.5.x on the new one, so push the
-image first, then save the new URL in the app, which starts the deployment
-(`docs/release_notes.md`). Leave `DBMS_DRIVER_CLASSNAME` unset.
+3.6.0 stops at startup on the old form, and 3.5.x on the new one. Push the
+image, save the new URL in the app, then run `make deploy`. The deployment that
+saving the URL starts reuses the 3.5.x image, so it fails and is rolled back;
+`make deploy` pulls 3.6.0 (`docs/release_notes.md`). Leave
+`DBMS_DRIVER_CLASSNAME` unset.
 
 - The image no longer ships pgjdbc-ng's Netty 4.1.63, which the server's TLS
   connection to the database ran through. Docker Scout's count for the image

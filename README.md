@@ -94,7 +94,7 @@ make docker-build            # build the image for this machine into local Docke
 make docker-scan             # docker-build, then list the image's CVEs with Docker Scout
 make release-check           # check the checkout is fit to release (pushes nothing)
 make release                 # gate + test, then push and verify the multi-arch image
-make deploy                  # start a Digital Ocean deployment (secrets/deploy-app.sh)
+make deploy                  # deploy :latest to Digital Ocean, pulling it again (doctl; checks it is VERSION)
 make upgrade-wrapper         # bump the Gradle wrapper to the catalog-pinned version
 ```
 
@@ -152,8 +152,9 @@ default, since `env_file` wins over `ENV`.
 4. Merge to `master` and let CI pass. `make release-check` lists anything still
    missing from steps 1–3.
 5. `make release` to test, then push and verify the Docker image (it asks first).
-6. Follow the runbook in [`docs/release_notes.md`](docs/release_notes.md) to
-   roll the deployment on Digital Ocean.
+6. `make deploy` to deploy it on Digital Ocean (needs an authenticated `doctl`). If the
+   release changes a setting, save it in the app first; the runbook in
+   [`docs/release_notes.md`](docs/release_notes.md) explains why.
 7. Cut a GitHub release: tag `X.Y.Z` (no `v` prefix), title `vX.Y.Z`.
 
 ### A `readingbat-core` that isn't on Maven Central
