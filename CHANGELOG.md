@@ -7,12 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.1] — 2026-11-03
+
+A drop-in bump from 3.6.0: no settings change, so push the image and run `make deploy`.
+
 ### Added
 - `make logs`, which follows the Digital Ocean app's runtime log (`doctl apps logs --follow --type
   run`), finding the app by `DO_APP_NAME` as `make deploy` does. It replaces `make do-log` and
   `secrets/app-log.sh`
 
 ### Changed
+- Bumped `readingbat-core` to 3.6.1. Its Sessions admin page shows each session's login time, in
+  place of its last activity, and a single Location column. It drops the Remote Host, ISP, and User
+  Agent columns, so a session whose IP or user agent changes is one row with its full request
+  count, and it covers the last 7 days by default, up from 2. Resend moves to 4.30.0
+- Bumped the pinned image tags in `docker-compose.yml` and `machines/content/run.sh` to 3.6.1
 - `make deploy` runs `doctl apps create-deployment --force-rebuild --wait` on the Digital Ocean app
   named `DO_APP_NAME` (`readingbat`), in place of `secrets/deploy-app.sh`. It pulls `:latest` again,
   after `make docker-verify` has checked that `:latest` is this checkout's version, and it fails if
@@ -395,7 +404,8 @@ entries) predate the current tagging convention and were never tagged in git, so
 diff to link to. The entries below skip those versions and compare against the nearest
 tag that exists.
 
-[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.6.0...HEAD
+[Unreleased]: https://github.com/readingbat/readingbat-site/compare/3.6.1...HEAD
+[3.6.1]: https://github.com/readingbat/readingbat-site/compare/3.6.0...3.6.1
 [3.6.0]: https://github.com/readingbat/readingbat-site/compare/3.5.1...3.6.0
 [3.5.1]: https://github.com/readingbat/readingbat-site/compare/3.5.0...3.5.1
 [3.5.0]: https://github.com/readingbat/readingbat-site/compare/3.4.0...3.5.0
