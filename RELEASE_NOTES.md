@@ -6,6 +6,30 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.6.0 — 2026-11-02
+
+A security release. `readingbat-core` 3.6.0 replaces the pgjdbc-ng database
+driver, whose final release bundles a Netty with a critical CVE and no fix
+coming, with the PostgreSQL JDBC driver.
+
+**Upgrade step required.** Change `DBMS_URL` in the Digital Ocean app and in
+`secrets/docker_env_vars`, keeping the host, port, and database:
+
+```
+jdbc:pgsql://<host>:<port>/readingbat?ssl.mode=Require        # before
+jdbc:postgresql://<host>:<port>/readingbat?sslmode=require    # after
+```
+
+3.6.0 stops at startup on the old form, and 3.5.x on the new one, so push the
+image first, then save the new URL in the app, which starts the deployment
+(`docs/release_notes.md`). Leave `DBMS_DRIVER_CLASSNAME` unset.
+
+- The image no longer ships pgjdbc-ng's Netty 4.1.63, which the server's TLS
+  connection to the database ran through. Docker Scout's count for the image
+  drops from 19 CVEs (one critical, seven high) to 4, none critical or high.
+- Bumped the pinned image tags in `docker-compose.yml` and
+  `machines/content/run.sh` to 3.6.0.
+
 ## v3.5.1 — 2026-11-02
 
 A `readingbat-core` update that stops logging anonymous traffic, Docker image

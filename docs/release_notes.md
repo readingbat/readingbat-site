@@ -26,3 +26,17 @@ is already on Docker Hub. `docker-push` still checks the checkout (clean, on `ma
 Then roll the deployment with `make deploy`, or log in to
 [Digital Ocean](https://digitalocean.com), click on the `readingbat` App, and click on
 `Actions` and then `Deploy`. Both start a new deployment of the app.
+
+### A release that changes the app's settings
+
+Some releases need a setting changed along with the image, such as 3.6.0's `DBMS_URL`
+(see `RELEASE_NOTES.md`). Push the image first, then change the setting in the app
+(`Settings`, the `pambrose-readingbat` component, `Environment Variables`). Saving it starts
+the deployment, and that deployment pulls the new `:latest`, so skip `make deploy`. Deploying
+before the change runs the new image on the old settings, and changing it before the push runs
+the old image on the new settings. If either deployment fails, Digital Ocean rolls back to the
+one that was running, but the saved settings stay as they are, so every later deployment fails
+the same way until the setting matches the image.
+
+Change `secrets/docker_env_vars` at the same time: `machines/content/run.sh` and
+`docker-compose.yml` read their settings from a copy of it.
