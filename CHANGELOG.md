@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `make deploy` runs `doctl apps create-deployment --force-rebuild --wait` on the Digital Ocean app
+  named `DO_APP_NAME` (`readingbat`), in place of `secrets/deploy-app.sh`. It pulls `:latest` again,
+  after `make docker-verify` has checked that `:latest` is this checkout's version, and it fails if
+  the deployment does. It needs `doctl`, installed and authenticated
+
+### Fixed
+- The deploy runbook said that saving a setting in the Digital Ocean app deploys the new `:latest`,
+  so `make deploy` could be skipped. That deployment reuses the image the app already has: saving
+  3.6.0's `DBMS_URL` ran the 3.5.1 image, which refused the new URL, and was rolled back. The
+  runbook and the 3.6.0 release notes now say to save the setting and then run `make deploy`
+
 ## [3.6.0] — 2026-11-02
 
 **Upgrade step required.** `DBMS_URL` moves to the PostgreSQL driver's form, keeping the host, port,

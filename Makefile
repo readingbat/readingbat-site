@@ -31,6 +31,9 @@ CORE_VERSION := $(shell sed -n 's/^readingbat = "\(.*\)"/\1/p' gradle/libs.versi
 CORE_REPO_URL := https://github.com/readingbat/readingbat-core
 MAVEN_CENTRAL_URL := https://repo1.maven.org/maven2/com/readingbat
 LOCAL_MAVEN_REPO ?= $(HOME)/.m2/repository
+# The Digital Ocean App Platform app that runs $(IMAGE_NAME):latest. deploy looks it up by name with doctl, which must be
+# installed and authenticated (doctl auth init).
+DO_APP_NAME := readingbat
 
 default: help
 
@@ -218,14 +221,22 @@ release: ## Gate, test, then push and verify the VERSION image on Docker Hub (as
 	@prev=$$(git describe --tags --abbrev=0 --exclude=$(VERSION) 2>/dev/null); \
 	echo; \
 	echo "Pushed $(IMAGE_NAME):$(VERSION) and :latest. Next:"; \
-	echo "  1. Roll the deployment on Digital Ocean: make deploy, or Actions > Deploy on the app (docs/release_notes.md)"; \
+	echo "  1. Deploy it on Digital Ocean: make deploy. If the release changes a setting, save it in the app first"; \
+	echo "     (docs/release_notes.md)"; \
 	echo "  2. Create the GitHub release if it doesn't exist yet: tag $(VERSION), title v$(VERSION), and a summary"; \
 	echo "     ending with **Full Changelog**: $(REPO_URL)/compare/$$prev...$(VERSION)"; \
 	echo "     gh release create $(VERSION) --target $(HEAD_SHA) --title v$(VERSION) --notes-file <notes>"
 	@command -v say >/dev/null && say "finished app release" || true
 
-deploy: ## Start a Digital Ocean deployment of the app (secrets/deploy-app.sh), as the console's Deploy does
-	./secrets/deploy-app.sh
+# A deployment started by saving a setting in the app reuses the image the app already has; --force-rebuild pulls
+# :latest again. docker-verify runs first, so what it pulls is this checkout's VERSION. --wait makes a failed
+# deployment fail the target; Digital Ocean has rolled back to the one that was running by then.
+deploy: docker-verify ## Deploy VERSION (:latest) to the Digital Ocean app, pulling the image again (doctl)
+	@id=$$(doctl apps list --format ID,Spec.Name --no-header | awk '$$2 == "$(DO_APP_NAME)" { print $$1 }'); \
+	[ -n "$$id" ] || { echo "ERROR: found no Digital Ocean app named $(DO_APP_NAME); is doctl installed and" \
+		"authenticated (doctl auth init)?" >&2; exit 1; }; \
+	echo "Deploying $(IMAGE_NAME):latest ($(VERSION)) to the $(DO_APP_NAME) app"; \
+	doctl apps create-deployment "$$id" --force-rebuild --wait
 	@command -v say >/dev/null && say "finished app deployment" || true
 
 do-log: ## Tail the deployed app log

@@ -23,20 +23,30 @@ then pushes `pambrose/readingbat:$VERSION` and `:latest` and checks them with
 is already on Docker Hub. `docker-push` still checks the checkout (clean, on `master`, no
 `SNAPSHOT`s) and readingbat-core's source before it pushes.
 
-Then roll the deployment with `make deploy`, or log in to
-[Digital Ocean](https://digitalocean.com), click on the `readingbat` App, and click on
-`Actions` and then `Deploy`. Both start a new deployment of the app.
+Then deploy it:
+
+```bash
+make deploy
+```
+
+It checks that `:latest` on Docker Hub is this checkout's version (`make docker-verify`), then
+runs `doctl apps create-deployment --force-rebuild --wait` on the `readingbat` app, which pulls
+`:latest` again and waits for the deployment to go live. It needs
+[`doctl`](https://docs.digitalocean.com/reference/doctl/), installed and authenticated
+(`doctl auth init`). If the deployment fails, so does `make deploy`. By then Digital Ocean has
+rolled back to the deployment that was running.
 
 ### A release that changes the app's settings
 
 Some releases need a setting changed along with the image, such as 3.6.0's `DBMS_URL`
-(see `RELEASE_NOTES.md`). Push the image first, then change the setting in the app
-(`Settings`, the `pambrose-readingbat` component, `Environment Variables`). Saving it starts
-the deployment, and that deployment pulls the new `:latest`, so skip `make deploy`. Deploying
-before the change runs the new image on the old settings, and changing it before the push runs
-the old image on the new settings. If either deployment fails, Digital Ocean rolls back to the
-one that was running, but the saved settings stay as they are, so every later deployment fails
-the same way until the setting matches the image.
+(see `RELEASE_NOTES.md`). Push the image, change the setting in the app (`Settings`, the
+`pambrose-readingbat` component, `Environment Variables`), then run `make deploy`.
+
+Saving a setting starts a deployment of its own, but that deployment reuses the image the app
+already has instead of pulling `:latest`. So it runs the old image with the new setting, and
+when the two don't fit, it fails and Digital Ocean rolls back to the deployment that was
+running. The site stays up on the old release. The saved setting stays as well, so until
+`make deploy` pulls the new image, every deployment that reuses the old one fails the same way.
 
 Change `secrets/docker_env_vars` at the same time: `machines/content/run.sh` and
 `docker-compose.yml` read their settings from a copy of it.
