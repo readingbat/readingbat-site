@@ -38,6 +38,8 @@ login-info.txt
 
 # Package Files #
 *.jar
+# The JMX exporter agent is vendored for the Docker image
+!jmx/jmx_prometheus_javaagent-*.jar
 *.war
 *.nar
 *.ear

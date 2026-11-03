@@ -1,26 +1,21 @@
 [versions]
 buildconfig = "6.1.2"
 detekt = "2.0.0-alpha.6"
-gradle-wrapper = "9.8.1"
+gradle-wrapper = "9.8.2"
 jvm = "25"
-kotest = "6.2.5"
+kotest = "6.2.6"
 kotlin = "2.4.21"
-# The Kotlin scripting jars challenges run on; held back from kotlin (see configureScripting)
-kotlin-scripting = "2.4.10"
 kotlinter = "5.7.0"
-ktor = "3.6.0"
-logging = "8.0.4"
-readingbat = "3.5.0"
-versions = "0.66.0"
+ktor = "3.6.1"
+readingbat = "3.5.1"
+versions = "0.67.0"
 
 [libraries]
 readingbat-core = { module = "com.readingbat:readingbat-core", version.ref = "readingbat" }
 readingbat-kotest = { module = "com.readingbat:readingbat-kotest", version.ref = "readingbat" }
-kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "logging" }
 
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
-kotest-assertions-ktor = { module = "io.kotest:kotest-assertions-ktor", version.ref = "kotest" }
 
 ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktor" }
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }

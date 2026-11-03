@@ -6,22 +6,70 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+
 jobs:
+  # `make release-check` requires this job, by name, to have passed for HEAD (REQUIRED_CHECKS in the Makefile).
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Actions are pinned to full commit SHAs; Dependabot (.github/dependabot.yml) bumps each SHA with its
+      # trailing version comment.
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: '25'
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      # settings.gradle.kts takes a readingbat-core version that is not on Maven Central from the local Maven
+      # repo. The runner's is empty, so build that version from its readingbat-core tag and publish it there.
+      - name: Find the readingbat-core version
+        id: core
+        run: |
+          version=$(sed -n 's/^readingbat = "\(.*\)"/\1/p' gradle/libs.versions.toml)
+          # This workflow runs on pull_request, so on a fork PR the catalog is attacker-controlled, and the
+          # version becomes a git ref and part of a URL below. Accept nothing but a plain release version.
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Unexpected readingbat version '$version' in gradle/libs.versions.toml" >&2
+            exit 1
+          fi
+          on_central=true
+          for artifact in readingbat-core readingbat-kotest; do
+            url="https://repo1.maven.org/maven2/com/readingbat/$artifact/$version/$artifact-$version.pom"
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url")
+            case "$code" in
+              200) ;;
+              404) on_central=false ;;
+              *) echo "Could not tell whether $artifact $version is on Maven Central (HTTP $code)" >&2; exit 1 ;;
+            esac
+          done
+          echo "readingbat-core $version on Maven Central: $on_central"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "on-central=$on_central" >> "$GITHUB_OUTPUT"
+
+      - name: Check out readingbat-core at its tag
+        if: steps.core.outputs.on-central == 'false'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: readingbat/readingbat-core
+          ref: refs/tags/${{ steps.core.outputs.version }}
+          path: readingbat-core
+          persist-credentials: false
+
+      - name: Publish readingbat-core to the local Maven repo
+        if: steps.core.outputs.on-central == 'false'
+        working-directory: readingbat-core
+        run: ./gradlew publishToMavenLocal
 
       - name: Build, test, and lint
         run: ./gradlew build

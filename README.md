@@ -63,7 +63,8 @@ Tests use [Kotest](https://kotest.io) `StringSpec`. Test sources live under
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push and pull
 request against `master`. It builds, tests, and lints on JDK 25 (Temurin) with a
 single `./gradlew build` — `detekt` and `lintKotlin` both attach to `check`, so
-that one command is the same verification you get locally.
+that one command is the same verification you get locally. Its actions are pinned
+to commit SHAs, which Dependabot bumps weekly.
 
 ## Lint and format
 
@@ -83,41 +84,56 @@ shell scripts stay runnable on Linux and in Docker regardless of your
 Most common workflows have a `make` target. Run `make help` for the full list:
 
 ```bash
-make build                   # clean and build (no tests)
-make tests                   # full test suite
+make build                   # build (no tests)
+make tests                   # full test suite (always reruns the tests)
 make lint                    # lintKotlin + detekt
 make format                  # apply formatting
 make uberjar                 # build the fat jar
 make run-uber                # run the fat jar
+make docker-build            # build the image for this machine into local Docker (readingbat:local)
+make docker-scan             # docker-build, then list the image's CVEs with Docker Scout
 make release-check           # check the checkout is fit to release (pushes nothing)
 make release                 # gate + test, then push and verify the multi-arch image
-make deploy                  # deploy via secrets/deploy-app.sh
+make deploy                  # start a Digital Ocean deployment (secrets/deploy-app.sh)
 make upgrade-wrapper         # bump the Gradle wrapper to the catalog-pinned version
 ```
 
 ## Docker
 
-The image is built from `eclipse-temurin:25-jdk-alpine`, runs as a non-root
-`readingbat` user, and declares a `HEALTHCHECK` on `/ping`. `make release`
+The image is built from `eclipse-temurin:25-jdk-alpine`, pinned by digest (Dependabot
+proposes digest bumps), runs as a non-root `readingbat` user that can write only to
+`/app/dumps`, and declares a `HEALTHCHECK` on `/ping` (on `$PORT` when set). `make release`
 publishes a multi-arch (`linux/amd64,linux/arm64`) image to
-`pambrose/readingbat:{latest,$VERSION}`.
+`pambrose/readingbat:{latest,$VERSION}`. To check an image before releasing it,
+`make docker-scan` builds one locally (`readingbat:local`, never pushed) and lists its
+CVEs with Docker Scout. That includes the libraries inside `server.jar`, which a scan of the
+base image can't see.
+
+The Prometheus JMX exporter agent is vendored in `jmx/` and named in the Dockerfile's
+`ENTRYPOINT`. `make versions` does not see it, so check the
+[jmx_exporter releases](https://github.com/prometheus/jmx_exporter/releases) when refreshing
+dependencies.
 
 A multi-instance local composition is provided in
 [`docker-compose.yml`](docker-compose.yml).
 
 The image sets `JAVA_TOOL_OPTIONS` to write a heap dump on `OutOfMemoryError`, into
-`/app/dumps`, and each composed service gets its own **named volume** there. Two reasons it
-is a named volume rather than a bind mount: Docker creates a missing bind-mount directory as
-`root` while the container runs as uid 1000, so the JVM could not write the dump, whereas a
-named volume is initialized from the image's own `/app/dumps` and inherits its `readingbat`
-ownership. And one volume per service, because each container is pid 1 in its own namespace —
-a shared volume would have all three writing `java_pid1.hprof` over each other.
+`/app/dumps`, and then to exit, so the restart policy replaces a JVM that may have lost a
+thread to the OOM rather than leaving it serving traffic. Each composed service gets its own
+**named volume** at `/app/dumps`. Two reasons it is a named volume rather than a bind mount:
+Docker creates a missing bind-mount directory as `root` while the container runs as uid 1000,
+so the JVM could not write the dump, whereas a named volume is initialized from the image's
+own `/app/dumps` and inherits its `readingbat` ownership. And one volume per service, because
+each container is pid 1 in its own namespace, so every dump is named `java_pid1.hprof`, and
+the JVM will not overwrite an existing one — on a shared volume only the first OOM in any of
+the three would leave a dump.
 
-Retrieve a dump with:
+Retrieve a dump with the command below. It moves the file off the volume rather than copying
+it; a `java_pid1.hprof` left behind means the next OOM writes no dump at all.
 
 ```bash
 docker run --rm -v readingbat-site_readingbat0-dumps:/dumps -v "$PWD":/out \
-  alpine cp /dumps/java_pid1.hprof /out/
+  alpine mv /dumps/java_pid1.hprof /out/
 ```
 
 Two things to know. A dump is roughly the size of the live heap, and `MaxRAMPercentage=75`
@@ -139,6 +155,21 @@ default, since `env_file` wins over `ENV`.
 6. Follow the runbook in [`docs/release_notes.md`](docs/release_notes.md) to
    roll the deployment on Digital Ocean.
 7. Cut a GitHub release: tag `X.Y.Z` (no `v` prefix), title `vX.Y.Z`.
+
+### A `readingbat-core` that isn't on Maven Central
+
+The site can depend on a `readingbat-core` version that was never published to
+Maven Central, as long as it is a tag in `readingbat-core`:
+
+1. In `readingbat-core`, check out the tag and run `make publish-local`, which
+   puts the version in `~/.m2`. Gradle looks there for `com.readingbat`
+   artifacts after Maven Central.
+2. Point `readingbat` in `gradle/libs.versions.toml` at that version.
+
+CI finds the version missing from Central, builds it from its tag, and tests
+the site against that build. `make release-check` refuses a version that is
+neither on Central nor tagged, or that is missing from `~/.m2`. The image is
+built from your `~/.m2` copy, so publish it from the tag itself.
 
 ## Project conventions
 

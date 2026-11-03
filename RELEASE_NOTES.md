@@ -6,6 +6,47 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.5.1 — 2026-11-02
+
+A `readingbat-core` update that stops logging anonymous traffic, Docker image
+hardening, a dependency refresh, and build cleanup.
+
+- Bumped `readingbat-core` to 3.5.1, which records only logged-in users'
+  requests. Crawlers and bots that keep the session cookie no longer fill
+  `server_requests` and `browser_sessions`, anonymous visitors no longer cost
+  an ipgeolocation.io lookup, and active-session counts (admin pages and
+  Prometheus metrics) now cover logged-in sessions only. It also publishes a
+  strict 2.4.10 pin on the Kotlin scripting runtime, so this project drops its
+  own copy of that hold; the scripting jars resolve exactly as before.
+- Bumped Ktor to 3.6.1, Kotest to 6.2.6, and the Gradle versions plugin to
+  0.67.0; upgraded the Gradle wrapper to 9.8.2.
+- The image now exits on an `OutOfMemoryError`, after writing the heap dump,
+  so the restart policy replaces the damaged JVM; `machines/content/run.sh`
+  gains `--restart=unless-stopped` (in place of `--rm`) to match. Retrieve a
+  dump by *moving* it off the volume: the JVM never overwrites an existing
+  `java_pid1.hprof`, so one left behind means the next OOM writes none.
+- The runtime user can write only to `/app/dumps`; the jar, `Content.kt`, and
+  config are root-owned and read-only to the server.
+- The image upgrades `libexpat` and drops `binutils`, clearing the seven
+  high-severity CVEs Docker Scout reports for the base image.
+- The base image is pinned by digest, with Dependabot proposing weekly digest
+  bumps; the vendored JMX exporter agent moves from 1.5.0 to 1.7.0; the
+  `HEALTHCHECK` follows `$PORT`; unused ports 8091 and 8092 are no longer
+  exposed.
+- Build cleanup: dropped two unused dependencies, two unused `BuildConfig`
+  fields (one of which forced a recompile every day), and a hand-written
+  script-engine service file the fat jar already merges.
+- CI pins its actions to commit SHAs, updated to their current releases, and
+  Dependabot now keeps them current.
+- `make docker-push` checks the checkout before it replaces `:latest`, and
+  the release checks catch gitignored files that would otherwise ship in the
+  image. New `make docker-build` and `make docker-scan` targets build the
+  image locally and scan it with Docker Scout.
+- The site can run on a `readingbat-core` release that is tagged but not on
+  Maven Central. Publish it to `~/.m2` from the tag (`make publish-local` in
+  readingbat-core). CI builds the same tag itself, and `make release-check`
+  accepts the version instead of refusing `mavenLocal()`.
+
 ## v3.5.0 — 2026-10-12
 
 A guarded release flow, heap dumps on OOM, and a dependency refresh.

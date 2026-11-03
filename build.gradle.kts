@@ -2,8 +2,6 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 plugins {
   // `application` is applied transitively by the Ktor plugin (io.ktor.plugin), which also wires
@@ -18,25 +16,13 @@ plugins {
 
 description = "ReadingBat Site"
 
-// ValueSources are read fresh on each build (configuration-cache-safe), so APP_RELEASE_DATE
-// reflects the actual build time rather than a frozen configuration-cache value.
-abstract class CurrentDateValueSource : ValueSource<String, ValueSourceParameters.None> {
-  override fun obtain(): String =
-    LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-}
-
-val releaseDate = providers.of(CurrentDateValueSource::class) {}
-
 buildConfig {
   packageName("com.readingbat.site")
-  buildConfigField("String", "SITE_NAME", "\"${project.name}\"")
   buildConfigField("String", "SITE_VERSION", "\"${project.version}\"")
-  buildConfigField("String", "SITE_RELEASE_DATE", releaseDate.map { "\"$it\"" })
 }
 
 dependencies {
   implementation(libs.readingbat.core)
-  implementation(libs.kotlin.logging)
 
   implementation(platform(libs.ktor.bom))
   testImplementation(libs.ktor.server.test.host)
@@ -45,7 +31,6 @@ dependencies {
 
   testImplementation(libs.kotest.runner.junit5)
   testImplementation(libs.kotest.assertions.core)
-  testImplementation(libs.kotest.assertions.ktor)
 }
 
 application {
@@ -53,7 +38,6 @@ application {
 }
 
 configureKotlin()
-configureScripting()
 configureDetekt()
 configureKotlinter()
 configureKtor()
@@ -73,28 +57,6 @@ fun Project.configureKotlin() {
   tasks.named<KotlinCompile>("compileKotlin") {
     compilerOptions {
       freeCompilerArgs.add("-Xreturn-value-checker=check")
-    }
-  }
-}
-
-fun Project.configureScripting() {
-  // Kotlin 2.4.20 and later leave each JSR-223 script state's compiler environment reachable
-  // (about 27 MB apiece) once the engine moves to a new one. readingbat-core resets its pooled
-  // engines after every Kotlin script it evaluates, content sources and challenges alike, so the
-  // server's heap grows with every Kotlin challenge it loads. readingbat-core brings in the
-  // scripting jars at its own Kotlin version; this holds them at one that releases the state.
-  // Only the runtime classpaths are pinned: the compiler that builds this project is untouched.
-  val scriptingVersion = libs.versions.kotlin.scripting.get()
-  val compilerModules = setOf("kotlin-compiler-embeddable", "kotlin-daemon-embeddable", "kotlin-script-runtime")
-
-  configurations.matching { it.name in setOf("runtimeClasspath", "testRuntimeClasspath") }.configureEach {
-    resolutionStrategy.eachDependency {
-      if (requested.group == "org.jetbrains.kotlin" &&
-        (requested.name.startsWith("kotlin-scripting-") || requested.name in compilerModules)
-      ) {
-        useVersion(scriptingVersion)
-        because("Kotlin 2.4.20+ scripting retains every script state's compiler environment")
-      }
     }
   }
 }
