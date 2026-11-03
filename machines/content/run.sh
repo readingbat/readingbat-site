@@ -9,4 +9,4 @@
 # Retrieve a dump with the command below. It moves the file off the volume rather than copying it: the
 # JVM will not overwrite an existing java_pid1.hprof, so a dump left there means the next OOM writes none.
 #   docker run --rm -v readingbat-dumps:/dumps -v "$(pwd)":/out alpine mv /dumps/java_pid1.hprof /out/
-docker run -d --restart=unless-stopped --env-file=docker_env_vars -v readingbat-dumps:/app/dumps -p 8080:8080 pambrose/readingbat:3.6.0
+docker run -d --restart=unless-stopped --env-file=docker_env_vars -v readingbat-dumps:/app/dumps -p 8080:8080 pambrose/readingbat:3.6.1

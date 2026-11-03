@@ -6,6 +6,28 @@ release to Digital Ocean), see [`docs/release_notes.md`](docs/release_notes.md).
 
 ---
 
+## v3.6.1 — 2026-11-03
+
+A `readingbat-core` update to the Sessions admin page, and deploy tooling. A
+drop-in bump from 3.6.0: no settings change, so push the image and run
+`make deploy`.
+
+- Bumped `readingbat-core` to 3.6.1. The Sessions page shows when each session
+  logged in, in place of its last activity, and where it was, in one Location
+  column. It no longer splits a session across rows when its IP or user agent
+  changes, so each row carries the session's full request count, and it covers
+  the last 7 days by default, up from 2.
+- `make deploy` deploys with `doctl`, pulling `:latest` again, after checking
+  that `:latest` on Docker Hub is this checkout's version. It fails if the
+  deployment does.
+- `make logs` follows the app's runtime log with `doctl`, replacing
+  `make do-log`.
+- The deploy runbook (`docs/release_notes.md`) now says to run `make deploy`
+  after saving a setting in the app. The deployment that saving starts reuses
+  the image the app already has, so on its own it never ships a new release.
+- Bumped the pinned image tags in `docker-compose.yml` and
+  `machines/content/run.sh` to 3.6.1.
+
 ## v3.6.0 — 2026-11-02
 
 A security release. `readingbat-core` 3.6.0 replaces the pgjdbc-ng database
