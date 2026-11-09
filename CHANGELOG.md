@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- `security.yml`, a GitHub Actions workflow that builds the image and scans it with Trivy on pull
+  requests, pushes to `master`, and weekly. It fails on a fixable HIGH or CRITICAL vulnerability,
+  and findings from `master` and the weekly run go to code scanning alerts
+
+### Changed
+- `make release-check` requires the `image-scan` job to have passed for HEAD
+- CI's `readingbat-core` steps moved to the composite action
+  `.github/actions/provide-readingbat-core`, shared by `ci.yml` and `security.yml`
+- Upgraded the Gradle wrapper to 9.9.0
+
 ## [3.6.1] — 2026-11-03
 
 A drop-in bump from 3.6.0: no settings change, so push the image and run `make deploy`.

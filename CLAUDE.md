@@ -42,9 +42,17 @@ value that changes every build reruns every task downstream of it and misses the
 Keep new verification tasks wired into `check` — CI runs a single `./gradlew build`, so
 anything attached to `check` is picked up without a workflow edit.
 
-The workflow pins every action to a commit SHA with a trailing `# vX.Y.Z` comment, which Dependabot
-bumps. Keep the job named `build`: `make release-check` requires a passing check run by that name
-(`REQUIRED_CHECKS` in the `Makefile`). `zizmor .github` audits the workflow and Dependabot config.
+The workflows pin every action to a commit SHA with a trailing `# vX.Y.Z` comment, which Dependabot
+bumps. Keep the jobs named `build` (`ci.yml`) and `image-scan` (`security.yml`): `make release-check`
+requires a passing check run by each name (`REQUIRED_CHECKS` in the `Makefile`). `zizmor .github` audits
+the workflows and Dependabot config.
+
+`security.yml` runs Trivy on the built image on PRs, pushes to `master`, and weekly, and fails on a fixable
+HIGH or CRITICAL. `make docker-scan` is the local check, and uses Docker Scout, so the two can disagree.
+
+Both workflows get `readingbat-core` from the composite action `.github/actions/provide-readingbat-core`.
+Dependabot only bumps a composite action's pins if its directory is listed in `.github/dependabot.yml`, so
+add any new one there.
 
 ## Tests
 
@@ -78,7 +86,7 @@ Deploy target is Digital Ocean Apps (Docker only — no Heroku); the runbook is 
 `docs/release_notes.md`.
 
 - The Dockerfile's `FROM` is pinned by digest; Dependabot (`.github/dependabot.yml`) proposes the bumps. Refresh it by hand (`docker buildx imagetools inspect eclipse-temurin:25-jdk-alpine`, the index `Digest:`) if those stall. On each bump, rerun `docker scout cves` on the base image: once it ships libexpat ≥ 2.10.0 the Dockerfile's `apk upgrade libexpat` is a no-op and can go
-- Scan the *built* image (`make docker-scan`), not just the base: `server.jar` hides library CVEs a base-image scan never sees, shaded copies included. Until 3.6.0, `pgjdbc-ng-all` (from readingbat-core) shaded a Netty 4.1.63 with a critical CVE, and its `pom.properties` won the `shadowJar` duplicate, so scanners reported that Netty and missed the 4.2.x the app really uses
+- Scan the *built* image (`make docker-scan` locally, `image-scan` in CI), not just the base: `server.jar` hides library CVEs a base-image scan never sees, shaded copies included. Until 3.6.0, `pgjdbc-ng-all` (from readingbat-core) shaded a Netty 4.1.63 with a critical CVE, and its `pom.properties` won the `shadowJar` duplicate, so scanners reported that Netty and missed the 4.2.x the app really uses
 - `DBMS_URL` must match the driver the image's readingbat-core uses: `jdbc:postgresql://…?sslmode=require` from 3.6.0 on, `jdbc:pgsql://…?ssl.mode=Require` before it. Each refuses the other's form at startup, so a change of form ships with the image (runbook in `docs/release_notes.md`)
 - `make deploy` is `doctl apps create-deployment --force-rebuild --wait` on the app named `DO_APP_NAME`, after `docker-verify`. Keep `--force-rebuild`, which makes App Platform pull `:latest` again: the deployment that saving a setting starts reuses the image it already has (seen on 3.6.0's `DBMS_URL` change)
 - The JMX exporter agent is a jar vendored in `jmx/` and named in the `ENTRYPOINT`; `make versions` can't see it, so check its GitHub releases on each dependency refresh and update both

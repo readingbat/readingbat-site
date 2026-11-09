@@ -13,8 +13,9 @@ REPO_URL := https://github.com/readingbat/readingbat-site
 
 # `make release` pushes only from a clean, up-to-date checkout of this branch whose GitHub CI has passed.
 RELEASE_BRANCH ?= master
-# The ci.yml jobs that must have passed for HEAD. Any other check run must not have failed either.
-REQUIRED_CHECKS := build
+# The GitHub Actions jobs that must have passed for HEAD: build in ci.yml, image-scan in security.yml. Any other check
+# run must not have failed either.
+REQUIRED_CHECKS := build image-scan
 # The files that pin $(IMAGE_NAME) to a tag. release-check fails unless every pin in each one is VERSION;
 # keep this list in step with the "Versioning and releases" section of CLAUDE.md.
 RELEASE_VERSION_FILES := docker-compose.yml machines/content/run.sh

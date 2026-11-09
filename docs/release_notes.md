@@ -1,7 +1,9 @@
 ## Notes on deploying a new version of the ReadingBat Server
 
 Merge the version bump (version, image-tag pins, `CHANGELOG.md`, `RELEASE_NOTES.md`; see
-"Releasing and deploying" in the README) to `master` and let CI pass on it. If the
+"Releasing and deploying" in the README) to `master` and let CI pass on it. That includes
+the `image-scan` job, which fails on a HIGH or CRITICAL vulnerability that has a fix; bump
+the affected dependency or the base image digest to clear it. If the
 `readingbat-core` version isn't on Maven Central, publish it to `~/.m2` from its tag first
 (`make publish-local` in readingbat-core; see the README). To see what
 still blocks a release, without pushing anything:

@@ -1,0 +1,86 @@
+name: Security
+
+# Trivy scans the built image, so it sees the base layer and every library inside server.jar, and fails on a HIGH or
+# CRITICAL vulnerability that has a fix. Runs on pull requests, on push to master, and weekly, since a newly published
+# CVE can affect code that hasn't changed. Findings from master and the weekly run go to the repository's code scanning
+# alerts. No untrusted event payloads are referenced.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push to a pull request supersedes a run still in progress; other runs are never cancelled.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # `make release-check` requires this job, by name, to have passed for HEAD (REQUIRED_CHECKS in the Makefile).
+  image-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+
+      - name: Provide readingbat-core
+        uses: $/.github/actions/provide-readingbat-core
+
+      - name: Build the fat JAR and the image
+        id: image
+        run: |
+          ./gradlew buildFatJar
+          docker build -t readingbat:scan .
+
+      - name: Fail on a fixable HIGH or CRITICAL vulnerability
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: readingbat:scan
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+          format: table
+
+      # Pull requests only print the table above: uploading needs a token that fork and Dependabot pull requests lack.
+      # The upload keeps HIGH and CRITICAL findings that have no fix yet, so they stay visible. trivy-action drops the
+      # severity filter for SARIF output unless limit-severities-for-sarif is set.
+      - name: Write the findings as SARIF
+        if: always() && steps.image.outcome == 'success' && github.event_name != 'pull_request'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: readingbat:scan
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          limit-severities-for-sarif: true
+          format: sarif
+          output: trivy-image.sarif
+
+      - name: Upload the findings to code scanning
+        if: always() && steps.image.outcome == 'success' && github.event_name != 'pull_request'
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          sarif_file: trivy-image.sarif
+          category: trivy-image

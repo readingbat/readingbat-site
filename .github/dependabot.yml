@@ -13,7 +13,10 @@ updates:
   # The workflows pin every action to a commit SHA, which never moves on its own. This bumps the SHA
   # together with its trailing `# vX.Y.Z` comment.
   - package-ecosystem: "github-actions"
-    directory: "/"
+    # "/" covers .github/workflows; a composite action has to be listed for its own pins to be bumped.
+    directories:
+      - "/"
+      - "/.github/actions/provide-readingbat-core"
     schedule:
       interval: "weekly"
     # Let a release age a week before adopting it, so a compromised or yanked release is likely caught
