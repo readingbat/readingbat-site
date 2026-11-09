@@ -42,9 +42,17 @@ value that changes every build reruns every task downstream of it and misses the
 Keep new verification tasks wired into `check` — CI runs a single `./gradlew build`, so
 anything attached to `check` is picked up without a workflow edit.
 
-The workflow pins every action to a commit SHA with a trailing `# vX.Y.Z` comment, which Dependabot
-bumps. Keep the job named `build`: `make release-check` requires a passing check run by that name
-(`REQUIRED_CHECKS` in the `Makefile`). `zizmor .github` audits the workflow and Dependabot config.
+The workflows pin every action to a commit SHA with a trailing `# vX.Y.Z` comment, which Dependabot
+bumps. Keep the jobs named `build` (`ci.yml`) and `image-scan` (`security.yml`): `make release-check`
+requires a passing check run by each name (`REQUIRED_CHECKS` in the `Makefile`). `zizmor .github` audits
+the workflows and Dependabot config.
+
+`security.yml` runs Trivy on the built image on PRs, pushes to `master`, and weekly, and fails on a fixable
+HIGH or CRITICAL. `make docker-scan` is the local check, and uses Docker Scout, so the two can disagree.
+
+Both workflows get `readingbat-core` from the composite action `.github/actions/provide-readingbat-core`.
+Dependabot only bumps a composite action's pins if its directory is listed in `.github/dependabot.yml`, so
+add any new one there.
 
 ## Tests
 

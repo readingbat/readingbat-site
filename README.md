@@ -66,6 +66,11 @@ single `./gradlew build` — `detekt` and `lintKotlin` both attach to `check`, s
 that one command is the same verification you get locally. Its actions are pinned
 to commit SHAs, which Dependabot bumps weekly.
 
+[`.github/workflows/security.yml`](.github/workflows/security.yml) builds the image
+and scans it with [Trivy](https://trivy.dev) on the same events and weekly, because a
+newly published CVE can affect code that hasn't changed. It fails on a HIGH or CRITICAL
+vulnerability that has a fix, and `make release-check` requires it to have passed.
+
 ## Lint and format
 
 ```bash
