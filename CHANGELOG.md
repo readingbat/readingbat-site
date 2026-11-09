@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `make release-check` requires the `image-scan` job to have passed for HEAD
 - CI's `readingbat-core` steps moved to the composite action
   `.github/actions/provide-readingbat-core`, shared by `ci.yml` and `security.yml`
+- Upgraded the Gradle wrapper to 9.9.0
 
 ## [3.6.1] — 2026-11-03
 
