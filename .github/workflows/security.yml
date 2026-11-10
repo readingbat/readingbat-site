@@ -1,9 +1,14 @@
 name: Security
 
-# Trivy scans the built image, so it sees the base layer and every library inside server.jar, and fails on a HIGH or
-# CRITICAL vulnerability that has a fix. Runs on pull requests, on push to master, and weekly, since a newly published
-# CVE can affect code that hasn't changed. Findings from master and the weekly run go to the repository's code scanning
-# alerts. No untrusted event payloads are referenced.
+# Trivy scans the built image and fails on a HIGH or CRITICAL vulnerability that has a fix. It sees the base layer, but
+# it identifies a library in server.jar only by the META-INF/maven pom.properties its jar carried, so libraries without
+# one, Ktor, Kotlin, Exposed and the PostgreSQL driver among them, are never checked. They all come through
+# readingbat-core, whose dependency submission puts them in that repository's Dependabot alerts, for the versions on
+# its master, which can be ahead of the release pinned here.
+#
+# Runs on pull requests, on push to master, and weekly, since a newly published CVE can affect code that hasn't changed.
+# Findings from master and the weekly run go to the repository's code scanning alerts. No untrusted event payloads are
+# referenced.
 on:
   push:
     branches: [ master ]
