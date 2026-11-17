@@ -1,6 +1,6 @@
 # Pinned to the multi-arch index digest so a rebuild of the same version gets the same JDK;
 # Dependabot (.github/dependabot.yml) proposes the digest bumps that keep the base image patched.
-FROM eclipse-temurin:25-jdk-alpine@sha256:425f0b733cb23843bd78dbe5552513976d0cf12b9722752c48a5161cf5cd2f32
+FROM eclipse-temurin:25-jdk-alpine@sha256:c7c3d0bdf7f2bbc5a05a6712ed334d198360105634ea9adf76fca94f381b1e3f
 LABEL maintainer="Paul Ambrose <pambrose@mac.com>"
 
 # Define the user to use in this instance to prevent using root that even in a container, can be a security risk.
