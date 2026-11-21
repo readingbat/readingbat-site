@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped Kotest to 6.2.7
 - Upgraded the Gradle wrapper to 9.9.2
 
+### Security
+- Moved the base image to the `25-jdk-alpine` digest that carries Temurin 25.0.5.1, OpenSSL 3.5.9-r1,
+  and libexpat 2.10.0, and pointed the Dockerfile's `apk upgrade` at `zlib` in place of the now
+  redundant `libexpat`, taking Alpine's zlib 1.4-r0 ahead of a Temurin rebuild. Docker Scout's count
+  for the built image drops from one critical (CVE-2026-4738, in zlib) and six high (four in OpenSSL,
+  one each in libfontenc and musl) to the one in musl, whose fix Alpine 3.24 has yet to publish. The
+  JDK bundles its own zlib, so the server's compression never went through the vulnerable copy. The
+  zlib upgrade can go once a base-image digest bump carries the fix
+
 ## [3.6.1] — 2026-11-03
 
 A drop-in bump from 3.6.0: no settings change, so push the image and run `make deploy`.

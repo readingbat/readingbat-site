@@ -1,6 +1,6 @@
 # Pinned to the multi-arch index digest so a rebuild of the same version gets the same JDK;
 # Dependabot (.github/dependabot.yml) proposes the digest bumps that keep the base image patched.
-FROM eclipse-temurin:25-jdk-alpine@sha256:425f0b733cb23843bd78dbe5552513976d0cf12b9722752c48a5161cf5cd2f32
+FROM eclipse-temurin:25-jdk-alpine@sha256:22edbb1021420ae6e248519d1af07577742314d67d4c60fcbb2e285b7e47fa78
 LABEL maintainer="Paul Ambrose <pambrose@mac.com>"
 
 # Define the user to use in this instance to prevent using root that even in a container, can be a security risk.
@@ -18,11 +18,12 @@ ENV AGENT_CONFIG=/app/src/main/resources/application.conf
 # next OOM writes none.
 ENV JAVA_TOOL_OPTIONS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/app/dumps -XX:+ExitOnOutOfMemoryError"
 
-# Clear the base image's high CVEs: take the patched libexpat (only fontconfig uses it) from Alpine's
-# repo ahead of a Temurin rebuild, and drop binutils, which Temurin ships for jlink and nothing here
-# runs. libexpat's version then follows the build date rather than the digest. Re-check both on a
-# digest bump: once the base image carries the fix, the upgrade is a no-op and can go.
-RUN apk upgrade --no-cache libexpat && apk del --no-cache binutils
+# Clear the base image's fixable critical and high CVEs: take the patched zlib from Alpine's repo
+# ahead of a Temurin rebuild (freetype, libpng and apk use it; the JDK bundles its own), and drop
+# binutils, which Temurin ships for jlink and nothing here runs. zlib's version then follows the build
+# date rather than the digest. Re-check both on a digest bump: once the base image carries the fix,
+# the upgrade is a no-op and can go.
+RUN apk upgrade --no-cache zlib && apk del --no-cache binutils
 
 # Add the user and give it the dumps directory, the only place the server writes. Everything else
 # under /app stays owned by root, so the server cannot modify its own jar, config, or Content.kt.
